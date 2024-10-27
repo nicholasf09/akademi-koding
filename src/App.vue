@@ -2,10 +2,11 @@
 </script>
 
 <template>
-  <div class="w-full">
-    <h1 class="text-2xl text-center mt-10 font-semibold">Koko Wiyatno</h1>
-  </div>
-
+    <nav>
+      <router-link to="/home"></router-link>
+      <router-link to="/admin"></router-link>
+    </nav>
+    <router-view></router-view>
 </template>
 
 <style scoped>

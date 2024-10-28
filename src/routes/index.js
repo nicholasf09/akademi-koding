@@ -3,11 +3,13 @@ import Home from '@/views/user/Home.vue';
 import Dashboard from "@/views/admin/Dashboard.vue";
 import Course from "@/views/admin/Course.vue";
 import Module from "@/views/admin/Module.vue";
+import Question from "@/views/admin/Question.vue";
 const routes = [
   {path: "/home", component: Home, name: "Home"},
   {path: "/admin" , component: Dashboard, name: "Admin"},
   {path: "/admin/course/:id" , component: Course, name: "Course"},
   {path: "/admin/module/:id" , component: Module, name: "Module"},
+  {path: "/admin/module/:idModule/questions/:idQuestion" , component: Question, name: "Question"},
 
 ];
 const router = createRouter({

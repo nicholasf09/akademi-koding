@@ -4,6 +4,7 @@ import Dashboard from "@/views/admin/Dashboard.vue";
 import Course from "@/views/admin/Course.vue";
 import Module from "@/views/admin/Module.vue";
 import ListCourse from "@/views/user/Course.vue"; 
+import ListModule from "@/views/user/Module.vue";
 import Chapter from "@/views/user/Chapter.vue"
 import Question from "@/views/admin/Question.vue";
 import LoginUser from "@/views/user/LoginUser.vue";
@@ -13,6 +14,7 @@ const routes = [
   { path: "/login", component: LoginUser, name: "LoginUser" },
   { path: "/register", component: RegisterPage, name: "Register" },
   { path: "/course", component: ListCourse, name: "ListCourse"},
+  { path: "/module", component: ListModule, name: "ListModule"},
   { path: "/chapter", component: Chapter, name: "Chapter" },
   { path: "/admin", component: Dashboard, name: "Admin" },
   { path: "/admin/course/:id", component: Course, name: "Course" },

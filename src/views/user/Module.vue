@@ -3,6 +3,7 @@
 import ModuleCard from '@/components/ModuleCard.vue';
 import FooterComponent from '@/components/FooterComponent.vue';
 import Navbar from '@/components/Navbar.vue';
+import { getModules } from '@/services/module.service';
 
 export default {
   name: 'HomePage',
@@ -10,6 +11,16 @@ export default {
     Navbar,
     ModuleCard,
     FooterComponent,
+  },
+  data() {
+    return {
+      modules: [],
+    };
+  },
+  created() {
+    getModules((data) => {
+      this.modules = data;
+    });
   },
 };
 </script>
@@ -50,45 +61,13 @@ export default {
 
       <div class="grid grid-cols-3 gap-10 mb-10">
         <ModuleCard
-          imgSrc="https://img.freepik.com/premium-vector/vector-illustration-cute-green-python-coding-laptop_831490-4587.jpg"
-          title="Python Basic"
-          description="Lorem ipsum dolor sit amet consectetur adipisicing elit."
-          chapter="5"
-          link="#"
-        />
-        <ModuleCard
-          imgSrc="https://static.vecteezy.com/system/resources/previews/006/416/991/non_2x/illustration-graphic-cartoon-character-of-html-vector.jpg"
-          title="HTML Basic"
-          description="Lorem ipsum dolor sit amet consectetur adipisicing elit."
-          chapter="10"
-          link="#"
-        />
-        <ModuleCard
-          imgSrc="https://media.wired.com/photos/5955b1563ff99d6b3a1d1418/master/pass/google-tensor-flow-logo-F.jpg"
-          title="Introduction to Tensorflow"
-          description="Lorem ipsum dolor sit amet consectetur adipisicing elit."
-          chapter="7"
-          link="#"
-        />
-        <ModuleCard
-          imgSrc="https://media.wired.com/photos/5955b1563ff99d6b3a1d1418/master/pass/google-tensor-flow-logo-F.jpg"
-          title="Introduction to Tensorflow"
-          description="Lorem ipsum dolor sit amet consectetur adipisicing elit."
-          chapter="7"
-          link="#"
-        />
-        <ModuleCard
-          imgSrc="https://img.freepik.com/premium-vector/vector-illustration-cute-green-python-coding-laptop_831490-4587.jpg"
-          title="Python Basic"
-          description="Lorem ipsum dolor sit amet consectetur adipisicing elit."
-          chapter="5"
-          />
-        <ModuleCard
-          imgSrc="https://static.vecteezy.com/system/resources/previews/006/416/991/non_2x/illustration-graphic-cartoon-character-of-html-vector.jpg"
-          title="HTML Basic"
-          description="Lorem ipsum dolor sit amet consectetur adipisicing elit."
-          chapter="10"
-          link="#"
+          v-for="module in modules"
+          :key="module.id"
+          :imgSrc="'/'"
+          :title="module.name"
+          :description="module.description"
+          :chapter="'5'"
+          :link="module.link"
         />
       </div>
       <div class="w-full flex justify-center items-center">

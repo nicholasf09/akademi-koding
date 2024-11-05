@@ -4,8 +4,8 @@
     <ul class="flex ml-5">
       <li><a href="/" class="ml-7 font-semibold text-neutral-500 hover:text-black">Home</a></li>
       <li><a href="/course" class="ml-7 font-semibold text-neutral-500 hover:text-black">Courses</a></li>
-      <li><a href="#" class="ml-7 font-semibold text-neutral-500 hover:text-black">Sign in</a></li>
-      <li><a href="#" class="ml-7 font-semibold text-neutral-500 hover:text-black">Sign up</a></li>
+      <li><a href="/login" class="ml-7 font-semibold text-neutral-500 hover:text-black">Sign in</a></li>
+      <li><a href="/register" class="ml-7 font-semibold text-neutral-500 hover:text-black">Sign up</a></li>
     </ul>
   </div>
 </template>

@@ -16,7 +16,7 @@ const routes = [
   { path: "/register", component: RegisterPage, name: "Register" },
   { path: "/course", component: ListCourse, name: "ListCourse" },
   { path: "/course/:slug", component: ListModule, name: "ListModule" },
-  { path: "/chapter", component: Chapter, name: "Chapter" },
+  { path: "/course/:courseSlug/:moduleSlug", component: Chapter, name: "ChapterPage", props: true },
   { path: "/admin", component: Dashboard, name: "Admin" },
   { path: "/admin/course/:id", component: Course, name: "Course" },
   { path: "/admin/module/:id", component: Module, name: "Module" },

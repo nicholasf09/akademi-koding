@@ -2,8 +2,8 @@
   <div class="w-full h-full border-2 border-slate-300 rounded-lg p-7 shadow-xl">
     <div class="h-full flex flex-col justify-between">
       <div class="pb-10 flex justify-end">
-        <div :class="`w-[80px] h-[80px] p-3 ${bgColor} rounded-lg`">
-          <svg v-html="icon" fill="#fd4e8c" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg"></svg>
+        <div class="w-[60px] h-[60px]">
+          <img :src="icon" class="w-full h-full" />
         </div>
       </div>
       <div class="h-full">
@@ -33,10 +33,6 @@
 export default {
   name: "CourseCardComponent",
   props: {
-    bgColor: {
-      type: String,
-      required: true,
-    },
     icon: {
       type: String,
       required: true,

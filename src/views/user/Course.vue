@@ -6,7 +6,7 @@ import Navbar from '@/components/Navbar.vue';
 import { getCourses } from '@/services/course.service';
 
 export default {
-  name: 'HomePage',
+  name: 'CoursePage',
   components: {
     Navbar,
     CourseCard,
@@ -57,12 +57,6 @@ export default {
           <span
             class="absolute inset-0 translate-x-1.5 translate-y-1.5 bg-purple-300 transition-transform group-hover:translate-x-0 group-hover:translate-y-0"
           ></span>
-
-          <!-- <span
-            class="relative inline-block border-2 border-current px-8 py-3 text-sm font-bold uppercase tracking-widest text-black group-active:text-opacity-75"
-          >
-            Lihat Semua &raquo;
-          </span> -->
         </a>
       </div>
 
@@ -70,11 +64,10 @@ export default {
         <CourseCard
           v-for="course in courses"
           :key="course.id"
-          :bgColor="'bg-pink-100'"
-          :icon="'/'"
+          :icon="course.link"
           :title="course.name"
           :description="course.description"
-          :link="course.link"
+          :link="'/course/' + course.slug"
         />
       </div>
     </div>

@@ -2,10 +2,17 @@
     import SearchForm from './SearchForm.vue';
     import { computed, ref } from 'vue';
     import { useRouter } from 'vue-router';
+    import Modal from '@/components/Modal.vue';
 
     const router = useRouter();
 
     const searchFilter = ref('');
+
+    const module = ref([]);
+
+    const isModalVisible = ref(false);
+
+    const emit = defineEmits(['create-item']);
 
     const props = defineProps({
         items: {
@@ -29,9 +36,36 @@
         router.push({'path': `/admin/module/${id}`});
     }
 
+    const handleCreate = () => {
+        isModalVisible.value = true;
+    }
+
+    const submitCreate = () => {
+        const newItem = {
+            id: props.items.length + 1,
+            module: module.value,
+        };
+        emit('create-item', newItem);
+        module.value = '';
+        isModalVisible.value = false;
+    }
+
 </script>
 
 <template>
+
+    <Modal :isVisible="isModalVisible" @close="isModalVisible = false">
+        <h2 class="text-lg font-semibold mb-5">Create Module</h2>
+        <div class="flex flex-col mb-5">
+            <label class="text-sm font-semibold">Module</label>
+            <input type="text" v-model="module" class="border-2 p-1" />
+        </div>
+        <div class="flex w-full justify-between">
+            <button @click="submitCreate" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Create</button>
+        </div>
+
+    </Modal>
+
     <div class="bg-white relative border rounded-lg w-[95%] mx-auto">
         <div class="flex items-center justify-between w-[95%] ml-[2%]">
 
@@ -65,8 +99,16 @@
                     
                 </tr>
             </tbody>
-            
         </table>
+
+        <div class="bg-white relative rounded-lg w-[95%] mx-auto mb-10">
+            <div class="flex items-center justify-between w-[95%]">
+                <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg" @click="handleCreate">
+                    Create +
+                </button>
+            </div>
+        </div>
+
     </div>
     
 </template>

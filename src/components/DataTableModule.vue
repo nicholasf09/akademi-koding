@@ -6,11 +6,19 @@
 
     const router = useRouter();
 
-    const emit = defineEmits(['update-item']);
+    const emit = defineEmits(['update-item', 'create-item']);
 
     const searchFilter = ref('');
 
     const isModalVisible = ref(false);
+
+    const chapterCreate = ref({
+        title: '',
+        content: '',
+        tipe: '',
+    });
+
+    const isModalVisibleCreate = ref(false);
 
     const props = defineProps({
         items: {
@@ -52,7 +60,7 @@
 
     const quizClicked = (id) => {
         router.push({
-            path: `/admin/module/${props.idModule}/quiz/${id}`,
+            path: `/admin/module/${props.idModule}/questions/${id}`,
         });
     }
 
@@ -79,6 +87,24 @@
 
         emit('update-chapter', updatedItem);
     };
+    const handleCreate = () => {
+        isModalVisibleCreate.value = true;
+    }
+
+    const submitCreate = () => {
+        const newItem = {
+            id: props.items.length + 1,
+            chapter: props.items.length + 1,
+            title: chapterCreate.value.title,
+            content: chapterCreate.value.content,
+            tipe: chapterCreate.value.tipe,
+        };
+        emit('create-item', newItem);
+        chapterCreate.value.title = '';
+        chapterCreate.value.content = '';
+        chapterCreate.value.tipe = '';
+        isModalVisibleCreate.value = false;
+    }
 
     const chapter = ref('Python Basic');
 
@@ -121,6 +147,34 @@
 
     </Modal>
 
+    <Modal :isVisible="isModalVisibleCreate" @close="isModalVisibleCreate = false">
+        <h2 class="text-lg font-semibold mb-5">Create chapter</h2>
+        <div class="flex flex-col mb-5">
+            <label class="text-sm font-semibold">Title</label>
+            <input type="text" v-model="chapterCreate.title" class="border-2 p-1" />
+        </div>
+
+        <div class="flex flex-col mb-5">
+            <label class="text-sm font-semibold">Content</label>
+            <textarea name="" id="" v-model="chapterCreate.content" class="border-2 p-1"></textarea>
+        </div>
+
+        <div class="flex flex-col mb-5">
+            <label class="text-sm font-semibold">Content</label>
+            <select name="" id="" class="border-2 p-1" v-model="chapterCreate.tipe">
+                <option value="Bacaan" :selected="chapterCreate.tipe == 'Bacaan'">Bacaan</option>
+                <option value="Quiz" :selected="chapterCreate.tipe == 'Quiz'">Quiz</option>
+            </select>
+        </div>
+
+        
+
+        <div class="flex w-full justify-between">
+            <button @click="submitCreate" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Create</button>
+        </div>
+
+    </Modal>
+
     <div class="bg-white relative border rounded-lg w-[95%] mx-auto">
         <div class="flex items-center justify-between w-[95%] ml-[2%]">
 
@@ -158,7 +212,7 @@
 
         <div class="bg-white relative rounded-lg w-[95%] mx-auto mb-10">
             <div class="flex items-center justify-between w-[95%]">
-                <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg" @click="submitChanges">
+                <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg" @click="handleCreate">
                     Create +
                 </button>
             </div>

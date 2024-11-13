@@ -1,7 +1,7 @@
 <template>
     <div class="w-full h-screen bg-gray-200">
         <h1>Welcome to the Admin Page!</h1>
-        <DataTable :items="items" :idModule = "id" @update-item="handleUpdateItem"/>
+        <DataTable :items="items" :idModule = "id" @update-item="handleUpdateItem"  @create-item="handleCreateItem"/>
     </div>
 </template>
 
@@ -43,6 +43,15 @@ export default {
             const index = this.items.findIndex(item => item.id === updatedItem.id);
             this.items[index] = updatedItem;
         },
+        handleCreateItem(newItem) {
+            this.items.push({
+                id: newItem.id,
+                chapter: newItem.chapter,
+                title: newItem.title,
+                content: newItem.content,
+                tipe: newItem.tipe,
+            });
+        }   
     }
 };
 </script>

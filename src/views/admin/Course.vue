@@ -1,7 +1,7 @@
 <template>
     <div class="w-full h-screen bg-gray-200">
         <h1>Welcome to the Admin Page!</h1>
-        <DataTable :items="items" />
+        <DataTable :items="items" @create-item="handleCreateItem" />
     </div>
 </template>
 
@@ -34,5 +34,14 @@ export default {
             items,
         };
     },
+    methods: {
+        handleCreateItem(newItem) {
+            this.items.push({
+                id: newItem.id,
+                module: newItem.module,
+                chapters: 0,
+            });
+        },
+    }
 };
 </script>

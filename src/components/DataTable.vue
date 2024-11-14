@@ -1,21 +1,26 @@
 <script setup>
     import SearchForm from './SearchForm.vue';
-    import { computed, ref, defineEmits } from 'vue';
+    import { computed, ref, defineEmits, watch } from 'vue';
     import { useRouter } from 'vue-router';
     import Modal from './Modal.vue';
+    import axios from 'axios';
 
     const router = useRouter();
 
     const searchFilter = ref('');
 
-    const course = ref({
-        name: '',        // New course properties
+    let course = ref({
+        name: '',        
         slug: '',
         link: '',
         description: ''
     });
 
+    let idEdit = ref(0);
+
     const isModalVisible = ref(false);
+
+    const isEdit = ref(false);
 
     const emit = defineEmits(['create-item']);
 
@@ -26,22 +31,45 @@
         }
     })
 
+    const items = ref([...props.items]);
+
+    watch(
+        () => props.items,
+        (newItems) => {
+            if (newItems) {
+                items.value = [...newItems];
+            }
+        },
+        { immediate: true } 
+    );
+
     const filteredItems = computed(() => {
 
         if (searchFilter.value != '') {
-            return props.items.filter(item => item.name.toLowerCase().includes(searchFilter.value.toLowerCase()));            
+            return items.value.filter(item => item.name.toLowerCase().includes(searchFilter.value.toLowerCase()));            
         }
-        return props.items;
+        return items.value;
     });
 
     const handleSearch = (value) => {
         searchFilter.value = value;
     }
 
-    const editClick = (id) => {
+    const moduleClick = (id) => {
         router.push({ 
             path: `/admin/course/${id}`, 
         });
+    }
+
+    const editClick = (id, name, slug, link, description) => {
+        course.value.name = name;
+        course.value.slug = slug;
+        course.value.link = link;
+        course.value.description = description;
+        idEdit.value = id;
+
+        isModalVisible.value = true;
+        isEdit.value = true;
     }
 
     const handleCreate = () => {
@@ -61,12 +89,53 @@
         isModalVisible.value = false;
     };
 
+
+    const submitEdit = () => {
+        const id = idEdit.value;
+        const name = course.value.name;
+        const slug = course.value.slug;
+        const link = course.value.link;
+        const description = course.value.description;
+
+        isEdit.value = false;
+        isModalVisible.value = false;
+        axios.post(`http://localhost:3000/update/course`, {
+        id: id,
+        name: name,
+        slug: slug,
+        link: link,
+        description: description,
+    })
+        .then(() => {
+            items.value = items.value.map(item => {
+                if (item.id === id) {
+                    return {
+                        ...item,
+                        name: name,
+                        slug: slug,
+                        link: link,
+                        description: description
+                    };
+                }
+                return item;
+            });
+        })
+        .catch(error => {
+            console.error("Error updating course:", error);
+        });
+
+        course.value = { name: '', slug: '', link: '', description: '' };
+        idEdit.value = 0;
+
+    }
+
 </script>
 
 <template>
 
     <Modal :isVisible="isModalVisible" @close="isModalVisible = false">
-        <h2 class="text-lg font-semibold mb-5">Create Course</h2>
+        <h2 class="text-lg font-semibold mb-5">{{ isEdit ? 'Edit Course' : 'Create Course' }}</h2>
+
         <div class="flex flex-col mb-5">
             <label class="text-sm font-semibold">Course</label>
             <input type="text" v-model="course.name" class="border-2 p-1" />
@@ -87,8 +156,19 @@
             <input type="text" v-model="course.description" class="border-2 p-1" />
         </div>
 
-        <div class="flex w-full justify-between">
-            <button @click="submitCreate" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Create</button>
+        <div class="flex flex-col mb-5">
+            <button 
+                v-if="isEdit" 
+                @click="submitEdit" 
+                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                Edit
+            </button>
+            <button 
+                v-else 
+                @click="submitCreate" 
+                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                Create
+            </button>
         </div>
 
     </Modal>
@@ -114,6 +194,7 @@
                     <th class="font-semibold py-2">Link</th>
                     <th class="font-semibold py-2">Description</th>
                     <th class="font-semibold py-2 px-4">Edit</th>
+                    <th class="font-semibold py-2 px-4">Modules</th>
                 </tr>
             </thead>
             <tbody>
@@ -124,8 +205,14 @@
                     <td class="font-semibold py-2 px-4">{{ item.link }}</td>
                     <td class="font-semibold py-2 px-4">{{ item.description }}</td>
                     <td class="font-semibold py-2">
-                        <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" @click="editClick(item.id)">
+                        <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" @click="editClick(item.id, item.name, item.slug, item.link, item.description)">
                             Edit
+                        </button>
+                    </td>
+
+                    <td>
+                        <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" @click="moduleClick(item.id)">
+                            Modules
                         </button>
                     </td>
                     

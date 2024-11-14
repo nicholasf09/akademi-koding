@@ -58,7 +58,6 @@ export default {
       }
     },
     submitCourse(newItem) {
-      
       addCourse(newItem, (newCourse) => {
         this.message = 'Course added successfully!';
         // this.course = { name: '', slug: '', description: '', link: '' };

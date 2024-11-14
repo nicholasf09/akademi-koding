@@ -8,7 +8,12 @@
 
     const searchFilter = ref('');
 
-    const course = ref([]);
+    const course = ref({
+        name: '',        // New course properties
+        slug: '',
+        link: '',
+        description: ''
+    });
 
     const isModalVisible = ref(false);
 
@@ -22,8 +27,9 @@
     })
 
     const filteredItems = computed(() => {
+
         if (searchFilter.value != '') {
-            return props.items.filter(item => item.course.toLowerCase().includes(searchFilter.value.toLowerCase()));            
+            return props.items.filter(item => item.name.toLowerCase().includes(searchFilter.value.toLowerCase()));            
         }
         return props.items;
     });
@@ -44,13 +50,16 @@
 
     const submitCreate = () => {
         const newItem = {
-            id: props.items.length + 1,
-            course: course.value,
+            name: course.value.name,    
+            slug: course.value.slug,
+            link: course.value.link,
+            description: course.value.description
         };
+        
         emit('create-item', newItem);
-        course.value = '';
+        course.value = { name: '', slug: '', link: '', description: '' };
         isModalVisible.value = false;
-    }
+    };
 
 </script>
 
@@ -60,8 +69,24 @@
         <h2 class="text-lg font-semibold mb-5">Create Course</h2>
         <div class="flex flex-col mb-5">
             <label class="text-sm font-semibold">Course</label>
-            <input type="text" v-model="course" class="border-2 p-1" />
+            <input type="text" v-model="course.name" class="border-2 p-1" />
         </div>
+
+        <div class="flex flex-col mb-5">
+            <label class="text-sm font-semibold">Slug</label>
+            <input type="text" v-model="course.slug" class="border-2 p-1" />
+        </div>
+
+        <div class="flex flex-col mb-5">
+            <label class="text-sm font-semibold">Link</label>
+            <input type="text" v-model="course.link" class="border-2 p-1" />
+        </div>
+
+        <div class="flex flex-col mb-5">
+            <label class="text-sm font-semibold">Description</label>
+            <input type="text" v-model="course.description" class="border-2 p-1" />
+        </div>
+
         <div class="flex w-full justify-between">
             <button @click="submitCreate" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Create</button>
         </div>
@@ -85,13 +110,19 @@
                 <tr>
                     <th class="font-semibold py-2 px-4">ID</th>
                     <th class="font-semibold py-2">Course</th>
+                    <th class="font-semibold py-2">Slug</th>
+                    <th class="font-semibold py-2">Link</th>
+                    <th class="font-semibold py-2">Description</th>
                     <th class="font-semibold py-2 px-4">Edit</th>
                 </tr>
             </thead>
             <tbody>
                 <tr v-for="item in filteredItems" :key="item.id">
                     <td class="font-semibold py-2 px-4">{{ item.id }}</td>
-                    <td class="font-semibold py-2 px-4">{{ item.course }}</td>
+                    <td class="font-semibold py-2 px-4">{{ item.name }}</td>
+                    <td class="font-semibold py-2 px-4">{{ item.slug }}</td>
+                    <td class="font-semibold py-2 px-4">{{ item.link }}</td>
+                    <td class="font-semibold py-2 px-4">{{ item.description }}</td>
                     <td class="font-semibold py-2">
                         <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" @click="editClick(item.id)">
                             Edit

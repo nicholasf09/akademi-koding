@@ -9,6 +9,7 @@ import Chapter from "@/views/user/Chapter.vue"
 import Question from "@/views/admin/Question.vue";
 import LoginUser from "@/views/user/LoginUser.vue";
 import RegisterPage from "@/views/user/Register.vue";
+import HealthCheck from "@/views/HealthCheck.vue";
 
 const routes = [
   { path: "/", component: HomePage, name: "Home" },
@@ -21,6 +22,7 @@ const routes = [
   { path: "/admin/course/:id", component: Course, name: "Course" },
   { path: "/admin/module/:id", component: Module, name: "Module" },
   { path: "/admin/module/:idModule/questions/:idQuestion", component: Question, name: "Question" },
+  { path: "/health", component: HealthCheck, name: "HealthCheck" },
 ];
 
 const router = createRouter({

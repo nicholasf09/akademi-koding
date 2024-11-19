@@ -24,7 +24,7 @@ export default defineConfig({
               ? req.headers.cookie.split('; ').find(row => row.startsWith('token='))?.split('=')[1]
               : null;
             const verify = jwt.verify(token, 'Nikf_Mbek_Mb_ganteng123');
-            
+            console.log(verify);
             if (!token) {
               // Kirim respon 401 jika token tidak ada
               res.statusCode = 401;

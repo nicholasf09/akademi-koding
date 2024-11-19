@@ -135,8 +135,16 @@
                     
                 </tr>
             </tbody>
-            
         </table>
+
+        <div class="bg-white relative rounded-lg w-[95%] mx-auto mb-10">
+            <div class="flex items-center justify-between w-[95%]">
+                <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg" @click="submitChanges">
+                    Create +
+                </button>
+            </div>
+        </div>
+        
     </div>
     
 </template>

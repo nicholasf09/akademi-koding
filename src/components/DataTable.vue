@@ -99,7 +99,8 @@
 
         isEdit.value = false;
         isModalVisible.value = false;
-        axios.post(`http://localhost:3000/update/course`, {
+        const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
+        axios.post(`${API_ENDPOINT}/update/course`, {
         id: id,
         name: name,
         slug: slug,

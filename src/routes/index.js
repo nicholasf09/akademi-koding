@@ -9,7 +9,7 @@ import Chapter from "@/views/user/Chapter.vue"
 import Question from "@/views/admin/Question.vue";
 import LoginUser from "@/views/user/LoginUser.vue";
 import RegisterPage from "@/views/user/Register.vue";
-import HealthCheck from "@/views/HealthCheck.vue";
+import HealthCheck from "@/views/Health.vue";
 
 const routes = [
   { path: "/", component: HomePage, name: "Home" },

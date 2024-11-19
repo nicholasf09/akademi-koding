@@ -3,8 +3,8 @@ import getCookies  from '../hooks/getCookies';
 
 export const getModules = (callback) => {
   const token = getCookies("token");
-
-  axios.get("http://localhost:3000/modules", {
+  const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
+  axios.get(`${API_ENDPOINT}/modules`, {
     headers: {
       Authorization: `Bearer ${token}`,
     }
@@ -20,7 +20,8 @@ export const getModules = (callback) => {
 export const getModuleByCourseId = async (courseId) => {
   const token = getCookies("token");
   try {
-    const response = await axios.get(`http://localhost:3000/module/course/${courseId}`, {
+    const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
+    const response = await axios.get(`${API_ENDPOINT}/module/course/${courseId}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       }
@@ -36,7 +37,8 @@ export const getModuleByCourseId = async (courseId) => {
 export const getModuleBySlug = async (slug) => {
   const token = getCookies("token");
   try {
-    const response = await axios.get(`http://localhost:3000/modules/slug/${slug}`, {
+    const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
+    const response = await axios.get(`${API_ENDPOINT}/modules/slug/${slug}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       }
@@ -51,7 +53,8 @@ export const getModuleBySlug = async (slug) => {
 
 export const addModule = (moduleData, callback) => {
   const token = getCookies("token");
-  axios.post("http://localhost:3000/add/module", moduleData, {
+  const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
+  axios.post(`${API_ENDPOINT}/add/module`, moduleData, {
     headers: {
       Authorization: `Bearer ${token}`,
     }
@@ -71,8 +74,10 @@ export const updateModule = (moduleData, courseId, callback) => {
     ...moduleData,
     courseId, 
   };
+  
+  const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
 
-  axios.post("http://localhost:3000/update/module", dataToSend, {
+  axios.post(`${API_ENDPOINT}/update/module`, dataToSend, {
     headers: {
       Authorization: `Bearer ${token}`,
     }

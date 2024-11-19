@@ -8,7 +8,8 @@ export const getChaptersByModule = async (moduleId) => {
   
 
   try {
-    const response = await axios.get(`http://localhost:3000/modules/${moduleId}/chapters`,{
+    const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
+    const response = await axios.get(`${API_ENDPOINT}/modules/${moduleId}/chapters`,{
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -27,7 +28,8 @@ export const addChapter = async (chapterData, module_id) => {
   chapterData.module_id = module_id;
 
   try {
-    const response = await axios.post("http://localhost:3000/add/chapter", chapterData, {
+    const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
+    const response = await axios.post(`${API_ENDPOINT}/add/chapter`, chapterData, {
       headers: {
         Authorization: `Bearer ${token}`,
       }

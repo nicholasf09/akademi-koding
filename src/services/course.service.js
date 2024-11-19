@@ -3,8 +3,8 @@ import getCookies  from '../hooks/getCookies';
 
 export const getCourses = (callback) => {
   const token = getCookies("token");
-  
-  axios.get("http://localhost:3000/courses", {
+  const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
+  axios.get(`${API_ENDPOINT}/courses`, {
     headers: {
       Authorization: `Bearer ${token}`,
     }
@@ -19,7 +19,8 @@ export const getCourses = (callback) => {
 
 export const addCourse = (courseData, callback) => {
   const token = getCookies("token");
-  axios.post("http://localhost:3000/add/course", courseData, {
+  const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
+  axios.post(`${API_ENDPOINT}/add/course`, courseData, {
     headers: {
       Authorization: `Bearer ${token}`,
       'Content-Type': 'multipart/form-data'

@@ -7,25 +7,10 @@
       Back To Course
     </button>
     <h1 class="text-lg font-semibold mx-8 cursor-pointer">Current Course: {{ moduleTitle }}</h1>
-    <a
-      href="javascript:void(0)"
-      class="bg-violet-500 hover:bg-violet-700 text-white font-bold py-2 px-4 rounded"
-      onclick="window.location.href = `${window.location.origin}${window.location.pathname}/submission`"
-    >
-      Project Submission
-    </a>
-
+    <a href="/register" class="bg-violet-500 hover:bg-violet-700 text-white font-bold py-2 px-4 rounded">Chapter List</a>
   </div>
   <div class="text-black p-4 flex items-center justify-between fixed border-t bg-violet-100 border-gray-700 w-full bottom-0 z-50">
-    <button
-      :disabled="!hasPrev"
-      class="bg-violet-500 hover:bg-violet-700 text-white font-bold py-2 px-4 rounded"
-      @click="$emit('prevChapter')">Previous</button>
-    <h1 class="text-md font-semibold mr-2 cursor-pointer text-center">{{ chapterTitle }}</h1>
-    <button
-      :disabled="!hasNext"
-      class="bg-violet-500 hover:bg-violet-700 text-white font-bold py-2 px-4 rounded"
-      @click="$emit('nextChapter')">Next</button>
+    <h1 class="text-lg font-reguler mx-auto cursor-pointer">WARNING! Plagiarism in any form will not be tolerated under any circumstances.</h1>
   </div>
 </template>
 

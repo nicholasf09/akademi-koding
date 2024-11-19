@@ -19,3 +19,16 @@ export const getModuleBySlug = async (slug) => {
     throw error;
   }
 };
+
+export const getProjectsByModuleId = async (moduleId) => {
+  try {
+    const response = await axios.get(`http://localhost:3000/module/${moduleId}/projects`);
+    return response.data; // Returns the projects data
+  } catch (error) {
+    console.error("Error fetching projects by module ID:", error);
+    throw error;
+  }
+};
+
+
+

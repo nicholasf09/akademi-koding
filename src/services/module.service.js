@@ -27,7 +27,7 @@ export const getModuleByCourseId = async (courseId) => {
       }
     });
 
-    return response.data; 
+    return response.data;
   } catch (error) {
     console.error("Error fetching module by course id:", error);
     throw error;
@@ -72,9 +72,9 @@ export const updateModule = (moduleData, courseId, callback) => {
 
   const dataToSend = {
     ...moduleData,
-    courseId, 
+    courseId,
   };
-  
+
   const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
 
   axios.post(`${API_ENDPOINT}/update/module`, dataToSend, {
@@ -89,3 +89,16 @@ export const updateModule = (moduleData, courseId, callback) => {
       console.log("Error editing module:", err);
     });
 };
+
+export const getProjectsByModuleId = async (moduleId) => {
+  try {
+    const response = await axios.get(`http://localhost:3000/module/${moduleId}/projects`);
+    return response.data; // Returns the projects data
+  } catch (error) {
+    console.error("Error fetching projects by module ID:", error);
+    throw error;
+  }
+};
+
+
+

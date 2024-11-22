@@ -7,9 +7,10 @@
 
 <script>
 import DataTable from '@/components/DataTableModule.vue';
-import { addChapter, getChaptersByModule } from '@/services/chapter.service';
-import { ref} from 'vue';
+import { ref } from 'vue';
 import { useRoute } from 'vue-router';
+
+import { addChapter, getChaptersByModule, updateChapter } from '@/services/chapter.service';
 
 export default {
     name: 'ModuleAdmin',
@@ -21,29 +22,25 @@ export default {
         const items = ref([]);
         const id = ref(route.params.id);
 
-
         return {
             items,
-            id
+            id,
         };
     },
     methods: {
-        handleUpdateItem(updatedItem) {
-            // console.log(updatedItem);
-            const index = this.items.findIndex(item => item.id === updatedItem.id);
-            this.items[index] = updatedItem;
+      handleUpdateItem(newItem){
+            const index = this.items.findIndex(item => item.id === newItem.id);
+            this.items[index] = newItem;
+
+            updateChapter(newItem, this.id, () => {
+                console.log("Module updated");
+            });
         },
         async handleCreateItem(newItem) {
             try {
                 const response = await addChapter(newItem, this.id);
-                
-                console.log("Chapter added");
-                this.items.push({
-                    id: response.data.id, 
-                    chapter: response.data.name || newItem.name,
-                    content: response.data.content || newItem.content,
-                    type: response.data.tipe || newItem.tipe,
-                });
+                this.items = [...this.items, { ...newItem, id: response.id }]; // Tambahkan item baru
+                console.log("Chapter added:", response);
             } catch (error) {
                 console.error("Error adding chapter:", error);
             }
@@ -51,15 +48,16 @@ export default {
         async getChaptersByModule() {
             try {
                 const response = await getChaptersByModule(this.id); // Menggunakan id dari route params
-                this.items = response; 
-                console.log("Chapters:", response); 
+                this.items = response;
+                console.log("Chapters:", response);
             } catch (error) {
                 console.error(error);
             }
-        }
+        },
     },
     mounted() {
         this.getChaptersByModule();
-    }
+    },
 };
+
 </script>

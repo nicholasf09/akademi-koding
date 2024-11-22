@@ -1,11 +1,11 @@
 // chapter.service.js
 import axios from 'axios';
-import getCookies from '../hooks/getCookies.js'; 
+import getCookies from '../hooks/getCookies.js';
 
 export const getChaptersByModule = async (moduleId) => {
 
   const token = getCookies('token');
-  
+
 
   try {
     const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
@@ -40,3 +40,30 @@ export const addChapter = async (chapterData, module_id) => {
     throw err; // Lempar error agar bisa ditangani di bagian pemanggil
   }
 };
+export const updateChapter = (chapterData, module_id, callback) => {
+  const token = getCookies("token");
+
+  // Gabungkan chapterData dengan module_id
+  const dataToSend = {
+    ...chapterData,
+    module_id,
+  };
+
+  const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
+
+  axios.post(`${API_ENDPOINT}/update/chapter`, dataToSend, {
+    headers: {
+      Authorization: `Bearer ${token}`, // Token untuk otentikasi
+    }
+  })
+    .then((res) => {
+      // Jika berhasil, panggil callback dengan data respons
+      callback(res.data);
+    })
+    .catch((err) => {
+      // Tangani error
+      console.error("Error updating chapter:", err);
+    });
+};
+
+

@@ -120,7 +120,10 @@
 
 <template>
 
-    <Modal :isVisible="isModalVisible" @close="isModalVisible = false">
+<Modal 
+        :isVisible="isModalVisible" 
+        @close="handleModalClose"
+    >
         <h2 class="text-lg font-semibold mb-5">{{  }}</h2>
         <div class="flex flex-col mb-5">
             <label class="text-sm font-semibold">Module</label>

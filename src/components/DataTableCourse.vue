@@ -68,6 +68,18 @@
         isModalVisible.value = true;
     }
 
+    const handleModalClose = () => {
+      isModalVisible.value = false;
+      module.value = {
+          name: '',
+          slug: '',
+          description: '',
+          link: '',
+          project: ''
+      };
+      isEdit.value = false;
+  };
+
     const submitCreate = () => {
         const newItem = {
             name: module.value.name,
@@ -120,8 +132,8 @@
 
 <template>
 
-<Modal 
-        :isVisible="isModalVisible" 
+<Modal
+        :isVisible="isModalVisible"
         @close="handleModalClose"
     >
         <h2 class="text-lg font-semibold mb-5">{{  }}</h2>

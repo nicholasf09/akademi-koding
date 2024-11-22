@@ -51,21 +51,15 @@ export default {
     };
   },
   methods: {
-    handleFileUpload(event) {
-      this.selectedFile = event.target.files[0];
-      if (this.selectedFile) {
-        this.course.link = `https://akademi-koding-image-bucket.s3.us-east-1.amazonaws.com/${this.selectedFile.name}`;
-      }
-    },
     submitCourse(newItem) {
+      console.log('New course:', newItem);
       addCourse(newItem, (newCourse) => {
         this.message = 'Course added successfully!';
         // this.course = { name: '', slug: '', description: '', link: '' };
-        this.items.push(newCourse);
+        this.items = [...this.items, newCourse];
         this.selectedFile = null;
       });
     },
-
     getCourses() {
       getCourses((data) => {
         this.items = data;

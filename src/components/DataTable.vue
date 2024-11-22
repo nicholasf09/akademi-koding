@@ -13,8 +13,13 @@
         name: '',        
         slug: '',
         link: '',
-        description: ''
+        description: '',
+        image_base64: ''
     });
+
+    const fileNameUpload = ref('');
+
+    const fileContent = ref('');
 
     let idEdit = ref(0);
 
@@ -76,17 +81,40 @@
         isModalVisible.value = true;
     }
 
-    const submitCreate = () => {
+    const submitCreate = async () => {
+        const lambdaUrl = 'https://febyaial3bu42hovadxxosia6e0opzss.lambda-url.us-east-1.on.aws/';
         const newItem = {
             name: course.value.name,    
             slug: course.value.slug,
             link: course.value.link,
-            description: course.value.description
+            description: course.value.description,
+            
         };
         
         emit('create-item', newItem);
+        
         course.value = { name: '', slug: '', link: '', description: '' };
         isModalVisible.value = false;
+
+        const payload = {
+            file_name: fileNameUpload.value,
+            file_content: fileContent.value,
+        };
+
+        try {
+            const response = await axios.post(lambdaUrl, payload, {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+            console.log('Response:', response.data);
+
+        } catch (error) {
+            console.error('Error uploading file:', error);
+        }
+
+
+
     };
 
 
@@ -130,11 +158,57 @@
 
     }
 
+    const handleClose = () => {
+        isModalVisible.value = false;
+        course.value = { name: '', slug: '', link: '', description: '' };
+        isEdit.value = 0;
+    }
+    
+    const handleUploadFile = async (event) => {
+
+        const file = event.target.files[0];
+
+        if (file) {
+            const fileName = file.name;
+            const fileExtension = fileName.substring(fileName.lastIndexOf('.'));
+            const fileBaseName = fileName.substring(0, fileName.lastIndexOf('.'));
+
+            const timestamp = Date.now();
+            const newFileName = `${fileBaseName}_${timestamp}${fileExtension}`;
+
+            const reader = new FileReader();
+            
+            const base64String = await new Promise((resolve, reject) => {
+                reader.onload = () => {
+                    const result = reader.result.split(',')[1]; 
+                    resolve(result);
+                };
+
+                reader.onerror = (error) => {
+                    reject(error);
+                };
+
+                reader.readAsDataURL(file); 
+            });
+
+            course.value.link = `https://akademi-koding.s3.us-east-1.amazonaws.com/uploads/${newFileName}`;
+            
+
+            fileContent.value = base64String;
+            fileNameUpload.value = newFileName;
+            
+        } else {
+            console.error('No file selected');
+        }
+    };
+
+
+
 </script>
 
 <template>
 
-    <Modal :isVisible="isModalVisible" @close="isModalVisible = false">
+    <Modal :isVisible="isModalVisible" @close="handleClose">
         <h2 class="text-lg font-semibold mb-5">{{ isEdit ? 'Edit Course' : 'Create Course' }}</h2>
 
         <div class="flex flex-col mb-5">
@@ -149,7 +223,16 @@
 
         <div class="flex flex-col mb-5">
             <label class="text-sm font-semibold">Link</label>
-            <input type="text" v-model="course.link" class="border-2 p-1" />
+            <input type="text" v-model="course.link" class="border-2 p-1" disabled/>
+        </div>
+
+        <div>
+            <input 
+                type="file" 
+                name="image" 
+                accept="image/*" 
+                class="mb-5" 
+                @change="handleUploadFile">
         </div>
 
         <div class="flex flex-col mb-5">

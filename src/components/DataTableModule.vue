@@ -14,8 +14,8 @@
       const isEdit = ref(false);
 
       const handleModalClose = () => {
-          isModalVisible.value = false; 
-          isEdit.value = false; 
+          isModalVisible.value = false;
+          isEdit.value = false;
 
           const id = idModelEdit.value;
           const name = chapter.value.name;
@@ -28,7 +28,7 @@
             content: content,
             type: type
           };
-          
+
           emit('update-item', updatedItem);
           isModalVisible.value = false;
           chapter.value = {
@@ -37,7 +37,7 @@
             content: '',
             type: '',
           };
-          
+
       };
 
       const props = defineProps({
@@ -139,8 +139,8 @@
   </script>
 
   <template>
-      <Modal 
-          :isVisible="isModalVisible" 
+      <Modal
+          :isVisible="isModalVisible"
           @close="handleModalClose"
       >
           <h2 class="text-lg font-semibold mb-5">{{  }}</h2>
@@ -184,7 +184,6 @@
                       <th class="font-semibold py-2">Content</th>
                       <th class="font-semibold py-2">Tipe</th>
                       <th class="font-semibold py-2 px-4">Edit</th>
-                      <th class="font-semibold py-2 px-4">Quiz</th>
                   </tr>
               </thead>
               <tbody>

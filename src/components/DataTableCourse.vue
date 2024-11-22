@@ -38,7 +38,7 @@
 
     const filteredItems = computed(() => {
         if (searchFilter.value != '') {
-            return props.items.filter(item => item.module.toLowerCase().includes(searchFilter.value.toLowerCase()));            
+            return props.items.filter(item => item.module.toLowerCase().includes(searchFilter.value.toLowerCase()));
         }
         return props.items;
     });
@@ -175,7 +175,7 @@
                     <th class="font-semibold py-2">Link</th>
                     <th class="font-semibold py-2">Project</th>
                     <th class="font-semibold py-2 px-4">Edit</th>
-                    <th class="font-semibold py-2 px-4">Chapters</th> 
+                    <th class="font-semibold py-2 px-4">Chapters</th>
                 </tr>
             </thead>
             <tbody>
@@ -197,7 +197,7 @@
                             Chapters
                         </button>
                     </td>
-                    
+
                 </tr>
             </tbody>
         </table>
@@ -211,5 +211,5 @@
         </div>
 
     </div>
-    
+
 </template>

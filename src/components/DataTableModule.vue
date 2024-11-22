@@ -1,17 +1,44 @@
 <script setup>
     import SearchForm from './SearchForm.vue';
     import { computed, ref, defineEmits } from 'vue';
-    import { useRouter } from 'vue-router';
     import Modal from '@/components/Modal.vue';
 
-    const router = useRouter();
-
-    const emit = defineEmits(['update-item', 'create-item']);
+    const emit = defineEmits(['create-item']);
 
     const searchFilter = ref('');
 
     const isModalVisible = ref(false);
 
+    const idModelEdit = ref(0);
+
+    const isEdit = ref(false);
+
+    const handleModalClose = () => {
+        isModalVisible.value = false; 
+        isEdit.value = false; 
+
+        const id = idModelEdit.value;
+        const name = chapter.value.name;
+        const content = chapter.value.content;
+        const type = chapter.value.type;
+
+        const updatedItem = {
+          id: id,
+          name: name,
+          content: content,
+          type: type
+        };
+        
+        emit('update-item', updatedItem);
+        isModalVisible.value = false;
+        chapter.value = {
+          id: '',
+          name: '',
+          content: '',
+          type: '',
+        };
+        
+    };
 
     const props = defineProps({
         items: {
@@ -27,7 +54,7 @@
 
     const filteredItems = computed(() => {
         if (searchFilter.value != '') {
-            return props.items.filter(item => item.course.toLowerCase().includes(searchFilter.value.toLowerCase()));            
+            return props.items.filter(item => item.course.toLowerCase().includes(searchFilter.value.toLowerCase()));
         }
         return props.items;
     });
@@ -42,11 +69,15 @@
         type: '',
     });
 
+    const editClick = (id, name, content, type) => {
+        isModalVisible.value = true;
+        idModelEdit.value = id;
 
-    const quizClicked = (id) => {
-        router.push({
-            path: `/admin/module/${props.idModule}/questions/${id}`,
-        });
+        chapter.value.name = name;
+        chapter.value.content = content;
+        chapter.value.type = type;
+        isEdit.value = true;
+
     }
 
 
@@ -79,14 +110,40 @@
         isModalVisible.value = false;
     }
 
+    const submitEdit = () => {
+      const id = idModelEdit.value;
+      const name = chapter.value.name;
+      const content = chapter.value.content;
+      const type = chapter.value.type;
+
+      const updatedItem = {
+        id: id,
+        name: name,
+        content: content,
+        type: type
+      };
+
+      emit('update-item', updatedItem);
+      isModalVisible.value = false;
+      chapter.value = {
+        name: '',
+        content: '',
+        type: '',
+      };
+
+      isEdit.value = false;
+    }
+
+
 
 </script>
 
 <template>
-
-
-    <Modal :isVisible="isModalVisible" @close="isModalVisible = false">
-        <h2 class="text-lg font-semibold mb-5">Create chapter</h2>
+    <Modal 
+        :isVisible="isModalVisible" 
+        @close="handleModalClose"
+    >
+        <h2 class="text-lg font-semibold mb-5">{{  }}</h2>
         <div class="flex flex-col mb-5">
             <label class="text-sm font-semibold">Chapter</label>
             <input type="text" v-model="chapter.name" class="border-2 p-1" />
@@ -105,19 +162,17 @@
             </select>
         </div>
 
-        
-
         <div class="flex w-full justify-between">
-            <button @click="submitCreate" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Create</button>
+            <button v-if="!isEdit" @click="submitCreate" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Create</button>
+            <button v-if="isEdit" @click="submitEdit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Edit</button>
         </div>
-
     </Modal>
 
     <div class="bg-white relative border rounded-lg w-[95%] mx-auto">
         <div class="flex items-center justify-between w-[95%] ml-[2%]">
 
             <SearchForm @search="handleSearch" />
-            
+
             <input type="text" class="border-2 p-2 rounded-xl shadow-md hover:shadow-lg" v-model="chapter" @blur="updateChapter(chapter)">
         </div>
 
@@ -139,13 +194,8 @@
                     <td class="font-semibold py-2">{{ item.content }}</td>
                     <td class="font-semibold py-2">{{ item.type }}</td>
                     <td class="font-semibold py-2 px-4">
-                        <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" @click="editClick(item.id, item.tipe)">
+                        <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" @click="editClick(item.id, item.name, item.content, item.type)">
                             Edit
-                        </button>
-                    </td>
-                    <td class="font-semibold py-2 px-4">
-                        <button v-if="item.type == 'Quiz'" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" @click="quizClicked(item.id)">
-                            Quiz
                         </button>
                     </td>
                 </tr>
@@ -161,5 +211,5 @@
         </div>
 
     </div>
-    
+
 </template>

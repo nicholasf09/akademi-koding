@@ -3,7 +3,7 @@
 import CourseCard from '@/components/CourseCard.vue';
 import FooterComponent from '@/components/FooterComponent.vue';
 import Navbar from '@/components/Navbar.vue';
-import { getCourses } from '@/services/course.service';
+import { getCourses,getCoursesWithPhoto } from '@/services/course.service';
 
 export default {
   name: 'CoursePage',
@@ -18,7 +18,7 @@ export default {
     };
   },
   created() {
-    getCourses((data) => {
+    getCoursesWithPhoto((data) => {
       this.courses = data;
     });
   },
@@ -64,7 +64,7 @@ export default {
         <CourseCard
           v-for="course in courses"
           :key="course.id"
-          :icon="course.link"
+          :icon="course.thumbnail"
           :title="course.name"
           :description="course.description"
           :link="'/course/' + course.slug"

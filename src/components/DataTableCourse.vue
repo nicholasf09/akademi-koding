@@ -3,6 +3,7 @@
     import { computed, ref } from 'vue';
     import { useRouter } from 'vue-router';
     import Modal from '@/components/Modal.vue';
+    import axios from 'axios';
 
     const router = useRouter();
 
@@ -15,6 +16,10 @@
         link: '',
         project: ''
     });
+
+    const fileNameUpload = ref('');
+
+    const fileContent = ref('');
 
     const isModalVisible = ref(false);
 
@@ -80,7 +85,9 @@
       isEdit.value = false;
   };
 
-    const submitCreate = () => {
+    const submitCreate = async () => {
+        const lambdaUrl = 'https://febyaial3bu42hovadxxosia6e0opzss.lambda-url.us-east-1.on.aws/';
+
         const newItem = {
             name: module.value.name,
             course_id: props.idCourse,
@@ -89,7 +96,9 @@
             link: module.value.link,
             project: module.value.project
         };
+
         emit('create-item', newItem);
+
         module.value = {
             name: '',
             slug: '',
@@ -97,10 +106,31 @@
             link: '',
             project: ''
         };
+
         isModalVisible.value = false;
+
+        const payload = {
+            file_name: fileNameUpload.value,
+            file_content: fileContent.value,
+        };
+
+        try {
+            const response = await axios.post(lambdaUrl, payload, {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+            console.log('Response:', response.data);
+
+        } catch (error) {
+            console.error('Error uploading file:', error);
+        }
+
     }
 
-    const submitEdit = () =>{
+    const submitEdit = async () =>{
+        const lambdaUrl = 'https://febyaial3bu42hovadxxosia6e0opzss.lambda-url.us-east-1.on.aws/';
+
         const id = idModelEdit.value;
         const name = module.value.name;
         const slug = module.value.slug;
@@ -126,7 +156,65 @@
             link: '',
             project: ''
         };
+
+        const payload = {
+            file_name: fileNameUpload.value,
+            file_content: fileContent.value,
+        };
+
+        try {
+            const response = await axios.post(lambdaUrl, payload, {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+            console.log('Response:', response.data);
+
+        } catch (error) {
+            console.error('Error uploading file:', error);
+        }
+
     }
+
+    
+    const handleUploadFile = async (event) => {
+        const file = event.target.files[0];
+
+        if (file) {
+            const fileName = file.name;
+            const fileExtension = fileName.substring(fileName.lastIndexOf('.'));
+            const fileBaseName = fileName.substring(0, fileName.lastIndexOf('.'));
+
+            const timestamp = Date.now();
+            const newFileName = `${fileBaseName}_${timestamp}${fileExtension}`;
+
+            const reader = new FileReader();
+            
+            const base64String = await new Promise((resolve, reject) => {
+                reader.onload = () => {
+                    const result = reader.result.split(',')[1]; 
+                    resolve(result);
+                };
+
+                reader.onerror = (error) => {
+                    reject(error);
+                };
+
+                reader.readAsDataURL(file); 
+            });
+
+            module.value.link = `uploads/${newFileName}`;
+            
+
+            fileContent.value = base64String;
+            fileNameUpload.value = newFileName;
+            
+        } else {
+            console.error('No file selected');
+        }
+    };
+
+
 
 </script>
 
@@ -136,7 +224,7 @@
         :isVisible="isModalVisible"
         @close="handleModalClose"
     >
-        <h2 class="text-lg font-semibold mb-5">{{  }}</h2>
+        <h2 class="text-lg font-semibold mb-5">{{ isEdit ? 'Edit Module' : 'Create Module' }}</h2>
         <div class="flex flex-col mb-5">
             <label class="text-sm font-semibold">Module</label>
             <input type="text" v-model="module.name" class="border-2 p-1" />
@@ -154,12 +242,21 @@
 
         <div class="flex flex-col mb-5">
             <label class="text-sm font-semibold">Link</label>
-            <input type="text" v-model="module.link" class="border-2 p-1" />
+            <input type="text" v-model="module.link" class="border-2 p-1" disabled/>
+        </div>
+
+        <div>
+            <input 
+                type="file" 
+                name="image" 
+                accept="image/*" 
+                class="mb-5" 
+                @change="handleUploadFile">
         </div>
 
         <div class="flex flex-col mb-5">
             <label class="text-sm font-semibold">Project</label>
-            <input type="text" v-model="module.project" class="border-2 p-1" />
+            <textarea v-model="module.project" class="border-2 p-1"></textarea>
         </div>
 
         <div class="flex w-full justify-between">

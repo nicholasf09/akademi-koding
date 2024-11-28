@@ -118,23 +118,26 @@
     };
 
 
-    const submitEdit = () => {
+    const submitEdit = async () => {
+        const lambdaUrl = 'https://febyaial3bu42hovadxxosia6e0opzss.lambda-url.us-east-1.on.aws/';
         const id = idEdit.value;
         const name = course.value.name;
         const slug = course.value.slug;
         const link = course.value.link;
         const description = course.value.description;
+        
 
         isEdit.value = false;
         isModalVisible.value = false;
         const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
+
         axios.post(`${API_ENDPOINT}/update/course`, {
-        id: id,
-        name: name,
-        slug: slug,
-        link: link,
-        description: description,
-    })
+            id: id,
+            name: name,
+            slug: slug,
+            link: link,
+            description: description,
+        })
         .then(() => {
             items.value = items.value.map(item => {
                 if (item.id === id) {
@@ -155,6 +158,23 @@
 
         course.value = { name: '', slug: '', link: '', description: '' };
         idEdit.value = 0;
+
+        const payload = {
+            file_name: fileNameUpload.value,
+            file_content: fileContent.value,
+        };
+
+        try {
+            const response = await axios.post(lambdaUrl, payload, {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+            console.log('Response:', response.data);
+
+        } catch (error) {
+            console.error('Error uploading file:', error);
+        }
 
     }
 
@@ -191,7 +211,7 @@
                 reader.readAsDataURL(file); 
             });
 
-            course.value.link = `https://akademi-koding.s3.us-east-1.amazonaws.com/uploads/${newFileName}`;
+            course.value.link = `uploads/${newFileName}`;
             
 
             fileContent.value = base64String;

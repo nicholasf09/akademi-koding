@@ -28,7 +28,12 @@ export default {
         };
     },
     methods: {
-        handleCreateItem(newItem) {
+        async handleCreateItem(newItem) {
+            
+            await addModule(newItem, (response) => {
+                newItem.id = response.id;
+            });
+
             this.items.push({
                 id: newItem.id,
                 name: newItem.name,
@@ -37,11 +42,6 @@ export default {
                 link: newItem.link,
                 project: newItem.project,
             });
-
-            addModule(newItem, () => {
-                console.log("Module added");
-            });
-            
             
         },
 

@@ -2,8 +2,8 @@
 import ModuleCard from '@/components/ModuleCard.vue';
 import FooterComponent from '@/components/FooterComponent.vue';
 import Navbar from '@/components/Navbar.vue';
-import { getModules } from '@/services/module.service';
-import { getCourses } from '@/services/course.service';
+import { getModulesByCourseIdWithPhoto  } from '@/services/module.service';
+import { getCourseBySlugWithPhoto } from '@/services/course.service';
 
 export default {
   name: 'ModulePage',
@@ -21,17 +21,17 @@ export default {
   created() {
     const courseSlug = this.$route.params.slug;
 
-    // Fetch the courses and find the one matching the slug
-    getCourses((courses) => {
-      this.course = courses.find((course) => course.slug === courseSlug);
+    getCourseBySlugWithPhoto(courseSlug, (data) => {
+      this.course = data;
 
-      // Fetch modules and filter by course_id if course is found
-      if (this.course) {
-        getModules((modules) => {
-          this.modules = modules.filter((module) => module.course_id === this.course.id);
-        });
-      }
+      getModulesByCourseIdWithPhoto (this.course.id, (data) => {
+        this.modules = data;
+        console.log(this.modules);
+      });
     });
+
+    
+
   },
 };
 </script>
@@ -43,7 +43,7 @@ export default {
     <!-- Display course image, title, and description -->
     <div v-if="course" class="w-full h-screen flex items-center bg-violet-100">
       <div class="ml-32 bg-contain bg-no-repeat">
-        <img :src="course.link" alt="" class="w-[500px] h-[500px]">
+        <img :src="'data:image/png;base64,' + course.thumbnail" alt="" class="w-[500px] h-[500px]">
       </div>
       <div class="w-2/4 pl-10">
         <h1 class="text-6xl font-bold leading-[70px] mb-5">
@@ -76,7 +76,7 @@ export default {
         <ModuleCard
           v-for="module in modules"
           :key="module.id"
-          :imgSrc="module.link"
+          :imgSrc="module.thumbnail"
           :title="module.name"
           :description="module.description"
           :chapter="'10'"

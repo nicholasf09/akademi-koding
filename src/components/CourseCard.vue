@@ -3,7 +3,7 @@
     <div class="h-full flex flex-col justify-between">
       <div class="pb-10 flex justify-end">
         <div class="w-[60px] h-[60px]">
-          <img :src="icon" class="w-full h-full" />
+          <img :src="'data:image/png;base64,' + icon" class="w-full h-full" />
         </div>
       </div>
       <div class="h-full">
@@ -52,3 +52,4 @@ export default {
   },
 };
 </script>
+

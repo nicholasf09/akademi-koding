@@ -1,6 +1,6 @@
 <template>
   <div class="w-full border-2 border-slate-300 rounded-lg shadow-xl">
-    <img :src="imgSrc" alt="Module image" class="w-full h-[250px] object-cover rounded-t-lg">
+    <img :src="'data:image/png;base64,' + imgSrc" alt="Module image" class="w-full h-[250px] object-cover rounded-t-lg">
     <div class="p-5 pb-10">
       <h1 class="text-2xl font-bold mb-3">{{ title }}</h1>
       <p class="mb-3">{{ description }}</p>

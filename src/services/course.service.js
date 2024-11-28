@@ -1,6 +1,87 @@
 import axios from 'axios';
 import getCookies  from '../hooks/getCookies';
 
+export const getCoursesWithPhoto = (callback) => {
+  const lambdaUrl = "https://yrw7jenvc3n5sr6h75npz4qwha0icglf.lambda-url.us-east-1.on.aws/";
+  const token = getCookies("token");
+  const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
+  
+  axios.get(`${API_ENDPOINT}/courses`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    }
+  })
+    .then((res) => {
+      const courses = res.data;
+      let processedCourses = 0;
+
+      courses.forEach((course, index) => {
+        const objectKey = course.link;
+
+        axios.post(lambdaUrl, {
+          objectKey: objectKey
+        }, {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        })
+          .then((lambdaRes) => {
+            // Menambahkan base64 ke thumbnail course
+            courses[index].thumbnail = lambdaRes.data.base64Data;
+            
+            // Cek jika semua course sudah diproses
+            processedCourses += 1;
+            if (processedCourses === courses.length) {
+              callback(courses);  // Kirim array courses yang sudah diproses ke callback
+            }
+          })
+          .catch((err) => {
+            console.log("Error fetching file from S3:", err);
+          });
+
+      });
+    })
+    .catch((err) => {
+      console.log("Error fetching courses:", err);
+    });
+};
+
+export const getCourseBySlugWithPhoto = async (slug, callback) => {
+  const lambdaUrl = "https://yrw7jenvc3n5sr6h75npz4qwha0icglf.lambda-url.us-east-1.on.aws/";
+  const token = getCookies("token");
+  const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
+
+  await axios.get(`${API_ENDPOINT}/course/${slug}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    }
+  })
+    .then((res) => {
+      // console.log("res:", res.data[0]);
+      const course = res.data[0];
+      const objectKey = course.link;
+
+
+      axios.post(lambdaUrl, {
+        objectKey: objectKey
+      }, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+        .then((lambdaRes) => {
+          course.thumbnail = lambdaRes.data.base64Data;
+          callback(course);
+        })
+        .catch((err) => {
+          console.log("Error fetching file from S3:", err);
+        });
+    })
+    .catch((err) => {
+      console.log("Error fetching course by slug:", err);
+    });
+};
+
 export const getCourses = (callback) => {
   const token = getCookies("token");
   const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
@@ -11,11 +92,11 @@ export const getCourses = (callback) => {
   })
     .then((res) => {
       callback(res.data);
-    })
-    .catch((err) => {
+    }).catch((err) => {
       console.log("Error fetching courses:", err);
     });
-};
+
+}
 
 export const addCourse = (courseData, callback) => {
   const token = getCookies("token");

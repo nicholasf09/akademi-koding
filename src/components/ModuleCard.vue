@@ -9,7 +9,12 @@
         <li>23,000 Views</li>
         <li>&#9733; 4.78/5.00</li>
       </ul>
-      <a class="group relative inline-block focus:outline-none focus:ring" :href="link">
+      <!-- Button logic based on enrollment -->
+      <button
+        v-if="!isEnrolled"
+        @click="enrollModule"
+        class="group relative inline-block focus:outline-none focus:ring"
+      >
         <span
           class="absolute inset-0 translate-x-1.5 translate-y-1.5 bg-purple-300 transition-transform group-hover:translate-x-0 group-hover:translate-y-0"
         ></span>
@@ -18,35 +23,81 @@
         >
           Enroll
         </span>
-      </a>
+      </button>
+      <button
+        v-else
+        @click="redirectToModule"
+        class="group relative inline-block focus:outline-none focus:ring"
+      >
+        <span
+          class="absolute inset-0 translate-x-1.5 translate-y-1.5 bg-blue-300 transition-transform group-hover:translate-x-0 group-hover:translate-y-0"
+        ></span>
+        <span
+          class="relative inline-block border-2 border-current px-8 py-3 text-sm font-bold uppercase tracking-widest text-black group-active:text-opacity-75"
+        >
+          Continue
+        </span>
+      </button>
     </div>
   </div>
 </template>
 
 <script>
+import { enrollInModule } from "@/services/module.service";
+import getCookies from "@/hooks/getCookies";
+
 export default {
   name: "ModuleCardComponent",
   props: {
-    imgSrc: {
-      type: String,
-      required: true,
+    imgSrc: String,
+    title: String,
+    description: String,
+    chapter: String,
+    moduleId: Number,
+    link: String
+  },
+  data() {
+    return {
+      isEnrolled: false, // Tracks if the user is enrolled in this module
+    };
+  },
+  methods: {
+    async enrollModule() {
+      try {
+        const userId = sessionStorage.getItem("userId");
+        const token = getCookies("token");
+
+        if (!userId || !token) {
+          throw new Error("Authentication data is missing.");
+        }
+
+        const response = await enrollInModule(userId, this.moduleId);
+        alert(response.message);
+
+        // Update local storage to reflect enrollment
+        const enrolledModules = JSON.parse(localStorage.getItem("enrolledModules") || "[]");
+        if (!enrolledModules.includes(this.moduleId)) {
+          enrolledModules.push(this.moduleId);
+          localStorage.setItem("enrolledModules", JSON.stringify(enrolledModules));
+        }
+
+        // Mark as enrolled and redirect to the module
+        this.isEnrolled = true;
+        this.redirectToModule();
+      } catch (error) {
+        console.error("Error during enrollment:", error);
+        alert(error.response?.data?.message || "Error enrolling in module.");
+      }
     },
-    title: {
-      type: String,
-      required: true,
+    redirectToModule() {
+      // Redirect to the module link
+      this.$router.push(this.link);
     },
-    description: {
-      type: String,
-      required: true,
-    },
-    chapter: {
-      type: String,
-      required: true,
-    },
-    link: {
-      type: String,
-      required: true,
-    },
+  },
+  mounted() {
+      // Check if the user is already enrolled
+      const enrolledModules = JSON.parse(localStorage.getItem("enrolledModules") || "[]");
+      this.isEnrolled = enrolledModules.includes(this.moduleId);
   },
 };
 </script>

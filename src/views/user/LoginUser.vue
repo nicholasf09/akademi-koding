@@ -18,11 +18,16 @@
             password: password.value,
           }
         );
-        
+
         if (response.data) {
+            const { id, token } = response.data; // Extract `id` and `token`
+
             // Set JWT token in cookies
-            document.cookie = `token=${response.data}; path=/; max-age=3600`;  
+            document.cookie = `token=${token}; path=/; max-age=3600`;
             // console.log('Login successful, token stored in cookies.');
+
+            sessionStorage.setItem("userId", id);
+
             // Redirect to dashboard
             window.location.href = '/course';
         } else {
@@ -43,7 +48,7 @@
       };
     },
   };
-  
+
 </script>
 
 <template>

@@ -2,8 +2,9 @@
 import ModuleCard from '@/components/ModuleCard.vue';
 import FooterComponent from '@/components/FooterComponent.vue';
 import Navbar from '@/components/Navbar.vue';
-import { getModulesByCourseIdWithPhoto  } from '@/services/module.service';
+import { getModulesByCourseIdWithPhoto,enrollInModule } from '@/services/module.service';
 import { getCourseBySlugWithPhoto } from '@/services/course.service';
+
 
 export default {
   name: 'ModulePage',
@@ -16,6 +17,7 @@ export default {
     return {
       modules: [],
       course: null,
+      enrolledModules: new Set(), // Store enrolled module IDs
     };
   },
   created() {
@@ -33,6 +35,21 @@ export default {
     
 
   },
+  methods: {
+    async enrollInModule(moduleId) {
+      try {
+        const userId = sessionStorage.getItem("userId");
+        if (!userId) throw new Error("User not authenticated.");
+
+        const response = await enrollInModule(userId, moduleId);
+        alert(response.message);
+        this.enrolledModules.add(moduleId); // Mark module as enrolled
+      } catch (error) {
+        console.error("Enrollment error:", error);
+        alert(error.response?.data?.message || "Error enrolling in module.");
+      }
+    },
+  },
 };
 </script>
 
@@ -40,7 +57,7 @@ export default {
   <div>
     <Navbar />
 
-    <!-- Display course image, title, and description -->
+    <!-- Course Header -->
     <div v-if="course" class="w-full h-screen flex items-center bg-violet-100">
       <div class="ml-32 bg-contain bg-no-repeat">
         <img :src="'data:image/png;base64,' + course.thumbnail" alt="" class="w-[500px] h-[500px]">
@@ -67,7 +84,7 @@ export default {
       </div>
     </div>
 
-    <!-- Display modules related to the course -->
+    <!-- Modules List -->
     <div class="w-full px-10 py-10">
       <p class="text-md text-violet-500 font-medium text-lg mb-3">Our Modules</p>
       <h1 class="text-4xl font-bold mb-7 w-2/4 leading-[50px]">Simak modules dari para experts!</h1>
@@ -80,22 +97,13 @@ export default {
           :title="module.name"
           :description="module.description"
           :chapter="'10'"
+          :moduleId="module.id"
           :link="'/course/' + course.slug + '/' + module.slug"
+          :isEnrolled="enrolledModules.has(module.id)"
+          @enroll="enrollInModule"
         />
       </div>
-      <div class="w-full flex justify-center items-center">
-        <a class="group relative inline-block focus:outline-none focus:ring" href="#">
-          <span
-            class="absolute inset-0 translate-x-1.5 translate-y-1.5 bg-purple-300 transition-transform group-hover:translate-x-0 group-hover:translate-y-0"
-          ></span>
-          <span
-            class="relative inline-block border-2 border-current px-8 py-3 text-sm font-bold uppercase tracking-widest text-black group-active:text-opacity-75"
-          >
-            Lihat Semua
-          </span>
-        </a>
-      </div>
     </div>
+    <FooterComponent />
   </div>
-  <FooterComponent />
 </template>

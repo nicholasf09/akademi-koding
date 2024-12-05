@@ -1,5 +1,6 @@
+/* eslint-disable no-useless-catch */
 import axios from 'axios';
-import getCookies  from '../hooks/getCookies';
+import getCookies from '../hooks/getCookies';
 
 export const getModules = (callback) => {
   const token = getCookies("token");
@@ -154,5 +155,14 @@ export const getProjectsByModuleId = async (moduleId) => {
   }
 };
 
+export const enrollInModule = async (userId, moduleId) => {
+  const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
+  try {
+    const response = await axios.post(`${API_ENDPOINT}/enroll`, { userId, moduleId });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
 
 

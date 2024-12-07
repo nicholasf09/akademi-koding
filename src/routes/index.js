@@ -3,6 +3,7 @@ import HomePage from '@/views/user/Home.vue';
 import Dashboard from "@/views/admin/Dashboard.vue";
 import Course from "@/views/admin/Course.vue";
 import Module from "@/views/admin/Module.vue";
+import Evaluation from "@/views/admin/Evaluation.vue"
 import ListCourse from "@/views/user/Course.vue";
 import ListModule from "@/views/user/Module.vue"; // This is the view for individual course modules
 import Chapter from "@/views/user/Chapter.vue";
@@ -24,6 +25,7 @@ const routes = [
   { path: "/admin/course/:id", component: Course, name: "Course" },
   { path: "/admin/module/:id", component: Module, name: "Module" },
   { path: "/admin/module/:idModule/questions/:idQuestion", component: Question, name: "Question" },
+  { path: "/admin/evaluation/:idModule", component: Evaluation, name: "Evaluation" },
   { path: "/health", component: HealthCheck, name: "HealthCheck" },
 ];
 

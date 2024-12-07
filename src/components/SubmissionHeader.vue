@@ -6,7 +6,7 @@
     >
       Back To Course
     </button>
-    <h1 class="text-lg font-semibold mx-8 cursor-pointer">Current Course: {{ moduleTitle }}</h1>
+    <h1 class="text-lg font-semibold mx-8 cursor-pointer"></h1>
     <a href="/register" class="bg-violet-500 hover:bg-violet-700 text-white font-bold py-2 px-4 rounded">Chapter List</a>
   </div>
   <div class="text-black p-4 flex items-center justify-between fixed border-t bg-violet-100 border-gray-700 w-full bottom-0 z-50">
@@ -18,20 +18,8 @@
 export default {
   name: "ChapterHeader",
   props: {
-    chapterTitle: {
-      type: String,
-      required: true
-    },
     moduleTitle: {
       type: String,
-      required: true
-    },
-    hasNext: {
-      type: Boolean,
-      required: true
-    },
-    hasPrev: {
-      type: Boolean,
       required: true
     }
   },

@@ -1,11 +1,11 @@
 <template>
-    <div class="w-full min-h-screen py-5 bg-neutral-800">
-        <h1 class="text-white text-center text-3xl py-5">Welcome to the Admin Modules Page!</h1>
+    <div class="w-full h-screen bg-gray-200 pt-10">
+        <!-- <h1>Welcome to the Admin Page Module!</h1> -->
         <DataTable :items="items" :idCourse="id" @create-item="handleCreateItem" @update-item="handleUpdateItem"/>
     </div>
 </template>
 
-<script>
+<script>    
 import DataTable from '@/components/DataTableCourse.vue';
 import { getModuleByCourseId, addModule, updateModule} from '@/services/module.service';
 import { ref} from 'vue';

@@ -4,6 +4,7 @@
     import { useRouter } from 'vue-router';
     import Modal from './Modal.vue';
     import axios from 'axios';
+    import getCookies from '@/hooks/getCookies';
 
     const router = useRouter();
 
@@ -222,6 +223,26 @@
         }
     };
 
+    const handleDelete = async (id) => {
+        const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
+        const token = getCookies("token");
+        axios.post(`${API_ENDPOINT}/delete/course`, {
+            id: id,
+        }, 
+        {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+        })
+        .then(() => {
+            items.value = items.value.filter(item => item.id !== id);
+        })
+        .catch(error => {
+            console.error("Error deleting course:", error);
+        });
+    }  
+
 
 
 </script>
@@ -299,6 +320,7 @@
                     <th class="font-semibold py-2">Description</th>
                     <th class="font-semibold py-2 px-4">Edit</th>
                     <th class="font-semibold py-2 px-4">Modules</th>
+                    <th class="font-semibold py-2 px-4">Delete</th>
                 </tr>
             </thead>
             <tbody>
@@ -319,7 +341,12 @@
                             Modules
                         </button>
                     </td>
-                    
+
+                    <td>
+                        <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded" @click="handleDelete(item.id)">
+                            Delete
+                        </button>
+                    </td>
                 </tr>
             </tbody>
         </table>

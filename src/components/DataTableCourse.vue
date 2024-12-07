@@ -4,6 +4,7 @@
     import { useRouter } from 'vue-router';
     import Modal from '@/components/Modal.vue';
     import axios from 'axios';
+    import getCookies from '@/hooks/getCookies';
 
     const router = useRouter();
 
@@ -218,7 +219,28 @@
         }
     };
 
+    const handleDelete = async (id) => {
+        const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
+        const token = getCookies("token");
 
+        axios.post(`${API_ENDPOINT}/delete/module`, 
+        {
+            id: id,
+            idCourse: props.idCourse
+        },
+        {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        })
+        .then((response) => {
+            console.log(response.data);
+        })
+        .catch((error) => {
+            console.error('Error deleting module:', error);
+        });
+
+    }
 
 </script>
 
@@ -276,7 +298,7 @@
             <SearchForm @search="handleSearch" />
 
             <div class="flex items-center justify-end text-sm font-semibold">
-                <input type="text" class="border-2 p-2 rounded-xl shadow-md hover:shadow-lg" value="Data Science" disabled>
+                <!-- <input type="text" class="border-2 p-2 rounded-xl shadow-md hover:shadow-lg" value="Data Science" disabled> -->
             </div>
         </div>
 
@@ -293,6 +315,7 @@
                     <th class="font-semibold py-2 px-4">Edit</th>
                     <th class="font-semibold py-2 px-4">Chapters</th>
                     <th class="font-semibold py-2 px-4">Submission</th>
+                    <th class="font-semibold py-2 px-4">Delete</th>
                 </tr>
             </thead>
             <tbody>
@@ -321,6 +344,11 @@
                         </button>
                     </td>
 
+                    <td class="font-semibold py-2 px-4">
+                        <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded" @click="handleDelete(item.id)">
+                            Delete
+                        </button>
+                    </td>
                 </tr>
             </tbody>
         </table>

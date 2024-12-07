@@ -1,5 +1,5 @@
 <template>
-    <div class="w-full py-5 bg-neutral-800">
+    <div class="w-full min-h-screen py-5 bg-neutral-800">
         <h1 class="text-white text-center text-3xl py-5">Welcome to the Admin Modules Page!</h1>
         <DataTable :items="items" :idCourse="id" @create-item="handleCreateItem" @update-item="handleUpdateItem"/>
     </div>

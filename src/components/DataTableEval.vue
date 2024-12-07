@@ -253,7 +253,7 @@
                     <td class="font-semibold py-2">{{ item.user_id }}</td>
                     <td class="font-semibold py-2">{{ item.link }}</td>
                     <td class="font-semibold py-2">{{ item.score }}</td>
-                    <td class="font-semibold py-2">{{ item.Comment }}</td>
+                    <td class="font-semibold py-2">{{ item.comment }}</td>
                     <td class="font-semibold py-2 px-4">
                         <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" @click="editClick(item.id, item.name, item.slug, item.description, item.link, item.project)">
                             Eval

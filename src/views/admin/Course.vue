@@ -1,11 +1,11 @@
 <template>
-    <div class="w-full min-h-screen py-5 bg-neutral-800">
-        <h1 class="text-white text-center text-3xl py-5">Welcome to the Admin Modules Page!</h1>
-        <DataTable :items="items" :idCourse="id" @create-item="handleCreateItem" @update-item="handleUpdateItem"/>
+    <div class="w-full h-screen bg-neutral-800 pt-10">
+        <h1 class="text-white text-center text-3xl py-5">Welcome to the Admin Chapters Page!</h1>
+        <DataTable :items="items" :idCourse="id" @create-item="handleCreateItem" @update-item="handleUpdateItem" @delete-item="handeleDelete"/>
     </div>
 </template>
 
-<script>
+<script>    
 import DataTable from '@/components/DataTableCourse.vue';
 import { getModuleByCourseId, addModule, updateModule} from '@/services/module.service';
 import { ref} from 'vue';
@@ -60,6 +60,12 @@ export default {
                 console.error("Error fetching modules:", error);
             }
         },
+
+        async handeleDelete(deleteId){
+            console.log("Delete");
+            console.log(deleteId);
+            this.items = this.items.filter(item => item.id !== deleteId);
+        }
 
     },
     mounted() {

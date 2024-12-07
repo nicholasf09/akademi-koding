@@ -1,7 +1,7 @@
 <template>
   <div class="w-full py-5 min-h-screen bg-neutral-800">
         <h1 class="text-white text-center text-3xl py-5">Welcome to the Admin Chapters Page!</h1>
-        <DataTable :items="items" :idModule = "id" @update-item="handleUpdateItem"  @create-item="handleCreateItem"/>
+        <DataTable :items="items" :idModule = "id" @update-item="handleUpdateItem"  @create-item="handleCreateItem" @delete-item="handleDeleteItem"/>
     </div>
 </template>
 
@@ -9,7 +9,6 @@
 import DataTable from '@/components/DataTableModule.vue';
 import { ref } from 'vue';
 import { useRoute } from 'vue-router';
-
 import { addChapter, getChaptersByModule, updateChapter } from '@/services/chapter.service';
 
 export default {
@@ -28,6 +27,9 @@ export default {
         };
     },
     methods: {
+      handleDeleteItem(id) {
+        this.items = this.items.filter(item => item.id !== id);
+      },
       handleUpdateItem(newItem){
             const index = this.items.findIndex(item => item.id === newItem.id);
             this.items[index] = newItem;
@@ -39,8 +41,8 @@ export default {
         async handleCreateItem(newItem) {
             try {
                 const response = await addChapter(newItem, this.id);
+                newItem.id = response.id;
                 this.items = [...this.items, { ...newItem, id: response.id }]; // Tambahkan item baru
-                console.log("Chapter added:", response);
             } catch (error) {
                 console.error("Error adding chapter:", error);
             }

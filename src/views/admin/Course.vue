@@ -41,7 +41,6 @@ export default {
                 link: newItem.link,
                 project: newItem.project,
             });
-
         },
 
         handleUpdateItem(newItem){

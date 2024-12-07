@@ -40,80 +40,90 @@
 import SubmissionHeader from '@/components/SubmissionHeader.vue';
 import { getProjectsByModuleId } from '@/services/module.service';
 
-export default {
-  name: "SubmissionPage",
-  components: {
-    SubmissionHeader,
-  },
-  data() {
-    return {
-      submissionTitle: "Chapter Submission",
-      problemDescription: "",
-      selectedFile: null,
-      comment: "",
-      moduleId: null,
-      projects: "",
-    };
-  },
-  async created() {
-    try {
-      this.moduleId = this.$route.params.moduleSlug;
-
-      this.projects = await getProjectsByModuleId(this.moduleId);
-      console.log("Fetched projects:", this.projects);
-
-      if (this.projects.length > 0) {
-        this.problemDescription = this.projects;
-      } else {
-        this.problemDescription = "No projects found for this module.";
-      }
-
-      console.log("Projects fetched successfully:", this.projects);
-    } catch (error) {
-      console.error("Error fetching projects:", error);
-      this.problemDescription = "Error loading project details.";
-    }
-  },
-  methods: {
-    // Handle file upload
-    handleFileUpload(event) {
-      this.selectedFile = event.target.files[0];
+  export default {
+    name: "SubmissionPage",
+    components: {
+      SubmissionHeader,
     },
-
-    // Handle form submission
-    async handleSubmit() {
-      if (!this.selectedFile) {
-        alert("Please upload a file before submitting.");
-        return;
-      }
-
-      const formData = new FormData();
-      formData.append("file", this.selectedFile);
-      formData.append("comment", this.comment);
-
+    data() {
+      return {
+        submissionTitle: "Chapter Submission",
+        problemDescription: "",
+        selectedFile: null,
+        comment: "",
+        moduleId: null,
+        projects: "",
+      };
+    },
+    async created() {
       try {
-        // Replace this URL with your submission endpoint
-        const response = await fetch("/api/submit", {
-          method: "POST",
-          body: formData,
-        });
+        this.moduleId = this.$route.params.moduleSlug;
 
-        if (response.ok) {
-          alert("Submission successful!");
+        this.projects = await getProjectsByModuleId(this.moduleId);
+        console.log("Fetched projects:", this.projects);
+
+        if (this.projects.length > 0) {
+          this.problemDescription = this.projects;
         } else {
-          alert("Submission failed. Please try again.");
+          this.problemDescription = "No projects found for this module.";
         }
+
+        console.log("Projects fetched successfully:", this.projects);
       } catch (error) {
-        console.error("Error submitting the form:", error);
-        alert("An error occurred. Please try again.");
+        console.error("Error fetching projects:", error);
+        this.problemDescription = "Error loading project details.";
       }
     },
+    methods: {
+      // Handle file upload
+      handleFileUpload(event) {
+        this.selectedFile = event.target.files[0];
+      },
 
-    goBack() {
-      this.$router.go(-1); // Navigate to the previous route
+      async handleSubmit() {
+        if (!this.selectedFile) {
+          alert("Please upload a file before submitting.");
+          return;
+        }
+
+        // Convert file to base64
+        const reader = new FileReader();
+        reader.onloadend = async () => {
+          const base64File = reader.result.split(',')[1]; // Get base64 string part
+
+          // Prepare the JSON payload
+          const payload = {
+            file_name: this.selectedFile.name,
+            file_content: base64File,
+            comment: this.comment,
+          };
+
+          try {
+            const lambdaEndpoint = "https://uiat6utq6t6sg6ega7don7mtba0vzprr.lambda-url.us-east-1.on.aws/";
+
+            const response = await fetch(lambdaEndpoint, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(payload), // Send the payload as JSON
+            });
+
+            if (response.ok) {
+              alert("Submission successful!");
+            } else {
+              const errorResponse = await response.json();
+              alert("Submission failed: " + errorResponse.message);
+            }
+          } catch (error) {
+            console.error("Error submitting the form:", error);
+            alert("An error occurred. Please try again.");
+          }
+        };
+        reader.readAsDataURL(this.selectedFile); // Read the file as base64
+      },
     },
-  },
-};
+  };
 </script>
 
 <style scoped>

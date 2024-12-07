@@ -6,7 +6,6 @@ export const getChaptersByModule = async (moduleId) => {
 
   const token = getCookies('token');
 
-
   try {
     const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
     const response = await axios.get(`${API_ENDPOINT}/modules/${moduleId}/chapters`,{
@@ -14,6 +13,7 @@ export const getChaptersByModule = async (moduleId) => {
         Authorization: `Bearer ${token}`
       }
   });
+  console.log("response", response.data);
     return response.data;
   } catch (error) {
     console.error("Error fetching chapters by module:", error);

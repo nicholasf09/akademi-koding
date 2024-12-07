@@ -2,6 +2,8 @@
       import SearchForm from './SearchForm.vue';
       import { computed, ref, defineEmits } from 'vue';
       import Modal from '@/components/Modal.vue';
+      import getCookies from '@/hooks/getCookies';
+import axios from 'axios';
 
       const emit = defineEmits(['create-item']);
 
@@ -134,6 +136,28 @@
         isEdit.value = false;
       }
 
+      const handleDelete = (id) => {
+        const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
+        const token = getCookies('token');
+        
+        axios.post(`${API_ENDPOINT}/delete/chapter`, 
+        {
+            id: id,
+            module_id: props.idModule
+        }, 
+        {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }).then(() => {
+            emit('delete-item', id);
+        }).catch((error) => {
+            console.error(error);
+        });
+
+          emit('delete-item', id);
+      }
+
 
 
   </script>
@@ -155,7 +179,7 @@
           </div>
 
           <div class="flex flex-col mb-5">
-              <label class="text-sm font-semibold">Content</label>
+              <label class="text-sm font-semibold">Tipe</label>
               <select name="" id="" class="border-2 p-1" v-model="chapter.type">
                   <option value="Bacaan" :selected="chapter.type == 'Bacaan'">Bacaan</option>
                   <option value="Quiz" :selected="chapter.type == 'Quiz'">Quiz</option>
@@ -184,6 +208,7 @@
                       <th class="font-semibold py-2">Content</th>
                       <th class="font-semibold py-2">Tipe</th>
                       <th class="font-semibold py-2 px-4">Edit</th>
+                      <th class="font-semibold py-2 px-4">Delete</th>
                   </tr>
               </thead>
               <tbody>
@@ -195,6 +220,12 @@
                       <td class="font-semibold py-2 px-4">
                           <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" @click="editClick(item.id, item.name, item.content, item.type)">
                               Edit
+                          </button>
+                      </td>
+
+                      <td class="font-semibold py-2 px-4">
+                          <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded" @click="handleDelete(item.id)">
+                              Delete
                           </button>
                       </td>
                   </tr>

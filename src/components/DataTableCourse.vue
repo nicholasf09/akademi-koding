@@ -233,8 +233,8 @@
                 Authorization: `Bearer ${token}`,
             },
         })
-        .then((response) => {
-            console.log(response.data);
+        .then(() => {
+            emit('delete-item', id);
         })
         .catch((error) => {
             console.error('Error deleting module:', error);

@@ -1,6 +1,6 @@
 <template>
-    <div class="w-full h-screen bg-gray-200">
-        <h1>Welcome to the Admin Page!</h1>
+  <div class="w-full py-5 bg-neutral-800">
+        <h1 class="text-white text-center text-3xl py-5">Welcome to the Admin Chapters Page!</h1>
         <DataTable :items="items" :idModule = "id" @update-item="handleUpdateItem"  @create-item="handleCreateItem"/>
     </div>
 </template>

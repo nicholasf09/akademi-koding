@@ -1,6 +1,6 @@
 <template>
-    <div class="w-full h-screen bg-gray-200">
-        <h1>Welcome to the Admin Page Module!</h1>
+    <div class="w-full py-5 bg-neutral-800">
+        <h1 class="text-white text-center text-3xl py-5">Welcome to the Admin Modules Page!</h1>
         <DataTable :items="items" :idCourse="id" @create-item="handleCreateItem" @update-item="handleUpdateItem"/>
     </div>
 </template>
@@ -21,7 +21,6 @@ export default {
         const items = ref([]);
         const id = ref(route.params.id);
 
-
         return {
             items,
             id
@@ -29,7 +28,7 @@ export default {
     },
     methods: {
         async handleCreateItem(newItem) {
-            
+
             await addModule(newItem, (response) => {
                 newItem.id = response.id;
             });
@@ -42,7 +41,7 @@ export default {
                 link: newItem.link,
                 project: newItem.project,
             });
-            
+
         },
 
         handleUpdateItem(newItem){
@@ -56,13 +55,13 @@ export default {
         async getModules() {
             try {
                 const response = await getModuleByCourseId(this.id); // Menggunakan id dari route params
-                this.items = response; 
-                // console.log("Modules:", response);   
+                this.items = response;
+                // console.log("Modules:", response);
             } catch (error) {
                 console.error("Error fetching modules:", error);
             }
         },
-        
+
     },
     mounted() {
         this.getModules();

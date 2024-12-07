@@ -25,7 +25,7 @@ const routes = [
   { path: "/admin/course/:id", component: Course, name: "Course" },
   { path: "/admin/module/:id", component: Module, name: "Module" },
   { path: "/admin/module/:idModule/questions/:idQuestion", component: Question, name: "Question" },
-  { path: "/admin/evaluation/:idModule", component: Evaluation, name: "Evaluation" },
+  { path: "/admin/evaluation/:idModule", component: Evaluation, name: "ProjectAdmin" },
   { path: "/health", component: HealthCheck, name: "HealthCheck" },
 ];
 

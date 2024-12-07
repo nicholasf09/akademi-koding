@@ -52,14 +52,6 @@
         searchFilter.value = value;
     }
 
-    const evalClick = (id) => {
-        router.push({'path': `/admin/evaluation/${id}`});
-    }
-
-    const chapterClick = (id) => {
-        router.push({'path': `/admin/module/${id}`});
-    }
-
     const editClick = (id, name, slug, description, link, project) => {
         isModalVisible.value = true;
         idModelEdit.value = id;
@@ -181,43 +173,6 @@
     }
 
 
-    const handleUploadFile = async (event) => {
-        const file = event.target.files[0];
-
-        if (file) {
-            const fileName = file.name;
-            const fileExtension = fileName.substring(fileName.lastIndexOf('.'));
-            const fileBaseName = fileName.substring(0, fileName.lastIndexOf('.'));
-
-            const timestamp = Date.now();
-            const newFileName = `${fileBaseName}_${timestamp}${fileExtension}`;
-
-            const reader = new FileReader();
-
-            const base64String = await new Promise((resolve, reject) => {
-                reader.onload = () => {
-                    const result = reader.result.split(',')[1];
-                    resolve(result);
-                };
-
-                reader.onerror = (error) => {
-                    reject(error);
-                };
-
-                reader.readAsDataURL(file);
-            });
-
-            module.value.link = `uploads/${newFileName}`;
-
-
-            fileContent.value = base64String;
-            fileNameUpload.value = newFileName;
-
-        } else {
-            console.error('No file selected');
-        }
-    };
-
 
 
 </script>
@@ -285,54 +240,27 @@
             <thead class="text-xs text-black font-bold uppercase bg-gray-200">
                 <tr>
                     <th class="font-semibold py-2 px-4">ID</th>
-                    <th class="font-semibold py-2">Module</th>
-                    <th class="font-semibold py-2">Slug</th>
-                    <th class="font-semibold py-2">Description</th>
-                    <th class="font-semibold py-2">Link</th>
+                    <th class="font-semibold py-2">User ID</th>
                     <th class="font-semibold py-2">Project</th>
-                    <th class="font-semibold py-2 px-4">Edit</th>
-                    <th class="font-semibold py-2 px-4">Chapters</th>
-                    <th class="font-semibold py-2 px-4">Submission</th>
+                    <th class="font-semibold py-2">Score</th>
+                    <th class="font-semibold py-2">Comment</th>
+                    <th class="font-semibold py-2">Eval</th>
                 </tr>
             </thead>
             <tbody>
                 <tr v-for="item in filteredItems" :key="item.id">
                     <td class="font-semibold py-2 px-4">{{ item.id }}</td>
-                    <td class="font-semibold py-2">{{ item.name }}</td>
-                    <td class="font-semibold py-2">{{ item.slug }}</td>
-                    <td class="font-semibold py-2">{{ item.description }}</td>
+                    <td class="font-semibold py-2">{{ item.user_id }}</td>
                     <td class="font-semibold py-2">{{ item.link }}</td>
-                    <td class="font-semibold py-2">{{ item.project }}</td>
+                    <td class="font-semibold py-2">{{ item.score }}</td>
+                    <td class="font-semibold py-2">{{ item.Comment }}</td>
                     <td class="font-semibold py-2 px-4">
                         <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" @click="editClick(item.id, item.name, item.slug, item.description, item.link, item.project)">
-                            Edit
+                            Eval
                         </button>
                     </td>
-
-                    <td class="font-semibold py-2 px-4">
-                        <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" @click="chapterClick(item.id)">
-                            Chapters
-                        </button>
-                    </td>
-
-                    <td class="font-semibold py-2 px-4">
-                        <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" @click="evalClick(item.id)">
-                            Check
-                        </button>
-                    </td>
-
                 </tr>
             </tbody>
         </table>
-
-        <div class="bg-white relative rounded-lg w-[95%] mx-auto mb-10">
-            <div class="flex items-center justify-between w-[95%]">
-                <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg" @click="handleCreate">
-                    Create +
-                </button>
-            </div>
-        </div>
-
     </div>
-
 </template>

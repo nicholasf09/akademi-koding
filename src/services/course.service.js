@@ -1,11 +1,11 @@
 import axios from 'axios';
-import getCookies  from '../hooks/getCookies';
+import getCookies from '../hooks/getCookies';
 
 export const getCoursesWithPhoto = (callback) => {
   const lambdaUrl = "https://yrw7jenvc3n5sr6h75npz4qwha0icglf.lambda-url.us-east-1.on.aws/";
   const token = getCookies("token");
   const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
-  
+
   axios.get(`${API_ENDPOINT}/courses`, {
     headers: {
       Authorization: `Bearer ${token}`,
@@ -28,7 +28,7 @@ export const getCoursesWithPhoto = (callback) => {
           .then((lambdaRes) => {
             // Menambahkan base64 ke thumbnail course
             courses[index].thumbnail = lambdaRes.data.base64Data;
-            
+
             // Cek jika semua course sudah diproses
             processedCourses += 1;
             if (processedCourses === courses.length) {

@@ -1,6 +1,6 @@
 <template>
   <div class="w-full border-2 border-slate-300 rounded-lg shadow-xl">
-    <img :src="'data:image/png;base64,' + imgSrc" alt="Module image" class="w-full h-[250px] object-cover rounded-t-lg">
+    <img :src="'data:image/png;base64,' + imgSrc" alt="Module image" class="w-full h-[250px] object-cover rounded-t-lg" />
     <div class="p-5 pb-10">
       <h1 class="text-2xl font-bold mb-3">{{ title }}</h1>
       <p class="mb-3">{{ description }}</p>
@@ -54,7 +54,7 @@ export default {
     description: String,
     chapter: String,
     moduleId: Number,
-    link: String
+    link: String,
   },
   data() {
     return {
@@ -62,24 +62,50 @@ export default {
     };
   },
   methods: {
+    async checkEnrollment() {
+      try {
+        const userId = getCookies("userId");
+        const token = getCookies("token");
+
+        const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
+        const response = await fetch(`${API_ENDPOINT}/enroll`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`, // Add token if required
+          },
+          body: JSON.stringify({
+            userId,
+            moduleId: this.moduleId,
+            checkOnly: true, // This tells the server we only want to check
+          }),
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          console.error("Server error:", errorData.message);
+          throw new Error(errorData.message || "Failed to fetch enrollment status.");
+        }
+
+        const data = await response.json();
+        this.isEnrolled = data.isEnrolled; // Ensure backend sends `isEnrolled`
+      } catch (error) {
+        console.error("Error checking enrollment status:", error);
+        alert("Could not verify enrollment status. Please try again.");
+      }
+    },
     async enrollModule() {
       try {
-        const userId = sessionStorage.getItem("userId");
+        const userId = getCookies("userId");
         const token = getCookies("token");
 
         if (!userId || !token) {
-          throw new Error("Authentication data is missing.");
+          alert("You need to be logged in to enroll.");
+          return;
         }
 
-        const response = await enrollInModule(userId, this.moduleId);
+        const response = await enrollInModule(userId, this.moduleId, false);
         alert(response.message);
-
-        // Update local storage to reflect enrollment
-        const enrolledModules = JSON.parse(localStorage.getItem("enrolledModules") || "[]");
-        if (!enrolledModules.includes(this.moduleId)) {
-          enrolledModules.push(this.moduleId);
-          localStorage.setItem("enrolledModules", JSON.stringify(enrolledModules));
-        }
 
         // Mark as enrolled and redirect to the module
         this.isEnrolled = true;
@@ -90,14 +116,15 @@ export default {
       }
     },
     redirectToModule() {
-      // Redirect to the module link
-      this.$router.push(this.link);
+      if (this.link) {
+        this.$router.push(this.link);
+      } else {
+        alert("Module link is missing. Please contact support.");
+      }
     },
   },
   mounted() {
-      // Check if the user is already enrolled
-      const enrolledModules = JSON.parse(localStorage.getItem("enrolledModules") || "[]");
-      this.isEnrolled = enrolledModules.includes(this.moduleId);
+    this.checkEnrollment(); // Query server for enrollment status
   },
 };
 </script>

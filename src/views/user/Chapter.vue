@@ -3,7 +3,13 @@
     <ChapterHeader :moduleTitle="moduleTitle" :chapterTitle="chapterTitle" />
     <div class="flex flex-grow my-16">
       <div class="ml-8 w-3/4 p-4 pl-32 max-h-[80vh] overflow-scroll overflow-x-hidden">
-        <ChapterContent :chapterContent="chapterContent" :chapterProject="chapterProject" />
+        <ChapterContent
+          :chapterContent="chapterContent"
+          :chapterProject="chapterProject"
+          :chapterId="chapterList[selectedChapterIndex]?.id"
+          :completed="chapterList[selectedChapterIndex]?.completed"
+          @chapter-completed="markChapterAsCompleted"
+        />
       </div>
       <div class="w-1/4 max-h-[80vh] overflow-scroll border-l border-gray-600 p-4">
         <ChapterList :chapterList="chapterList" @chapter-selected="handleChapterSelect" />
@@ -19,12 +25,13 @@
 </template>
 
 <script>
-import ChapterHeader from '@/components/ChapterHeader.vue';
-import ChapterContent from '@/components/ChapterContent.vue';
-import ChapterList from '@/components/ChapterList.vue';
-import { getChaptersByModule } from '@/services/chapter.service';
-import { getCourses } from '@/services/course.service';
-import { getModules } from '@/services/module.service';
+import ChapterHeader from "@/components/ChapterHeader.vue";
+import ChapterContent from "@/components/ChapterContent.vue";
+import ChapterList from "@/components/ChapterList.vue";
+import { getChaptersByModule } from "@/services/chapter.service";
+import { getCourses } from "@/services/course.service";
+import { getModules } from "@/services/module.service";
+import getCookies from "@/hooks/getCookies";
 
 export default {
   name: "ChapterPage",
@@ -81,10 +88,12 @@ export default {
     // Fetch chapter list based on the module ID
     async fetchChapters() {
       try {
-        const chapters = await getChaptersByModule(this.moduleId);
-        this.chapterList = chapters.map((chapter, index) => ({
+        const chapters = await getChaptersByModule(this.moduleId, getCookies("userId"));
+        console.log("Raw chapters data:", chapters);
+        this.chapterList = chapters.map((chapter) => ({
           ...chapter,
-          id: index + 1, // Replace `id` with a sequential number starting from 1
+          id: chapter.id, // Replace `id` with a sequential number starting from 1
+          completed: chapter.completed, // Add a completed property, initialize as false
         }));
         this.updateChapterContent(this.selectedChapterIndex); // Set initial content to the first chapter
       } catch (error) {
@@ -120,6 +129,14 @@ export default {
       if (this.selectedChapterIndex < this.chapterList.length - 1) {
         this.selectedChapterIndex++;
         this.updateChapterContent(this.selectedChapterIndex);
+      }
+    },
+
+    // Mark a chapter as completed
+    markChapterAsCompleted(chapterId) {
+      const chapter = this.chapterList.find((item) => item.id === chapterId);
+      if (chapter) {
+        chapter.completed = true;
       }
     },
   },

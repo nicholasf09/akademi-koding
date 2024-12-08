@@ -26,6 +26,7 @@
             document.cookie = `token=${token}; path=/; max-age=3600`;
             // console.log('Login successful, token stored in cookies.');
 
+            document.cookie = `userId=${id}; path=/; max-age=3600`;
             sessionStorage.setItem("userId", id);
 
             // Redirect to dashboard

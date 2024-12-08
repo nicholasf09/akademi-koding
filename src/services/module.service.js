@@ -103,8 +103,6 @@ export const getModulesByCourseIdWithPhoto = async (courseId, callback) => {
   }
 };
 
-
-
 export const addModule = async (moduleData, callback) => {
   const token = getCookies("token");
   const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
@@ -154,13 +152,24 @@ export const getProjectsByModuleId = async (moduleId) => {
     throw error;
   }
 };
-
-export const enrollInModule = async (userId, moduleId) => {
+export const enrollInModule = async (userId, moduleId, checkOnly = false) => {
   const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
+  const token = getCookies("token"); // Assuming you need an auth token
+
   try {
-    const response = await axios.post(`${API_ENDPOINT}/enroll`, { userId, moduleId });
+    const response = await axios.post(
+      `${API_ENDPOINT}/enroll`,
+      { userId, moduleId, checkOnly },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`, // Include token for authorization
+          "Content-Type": "application/json",
+        },
+      }
+    );
     return response.data;
   } catch (error) {
+    console.error("Error enrolling in module:", error.response?.data || error.message);
     throw error;
   }
 };

@@ -2,22 +2,21 @@
 import axios from 'axios';
 import getCookies from '../hooks/getCookies.js';
 
-export const getChaptersByModule = async (moduleId) => {
-
+export const getChaptersByModule = async (moduleId, userId) => {
   const token = getCookies('token');
-
-
   try {
     const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
-    const response = await axios.get(`${API_ENDPOINT}/modules/${moduleId}/chapters`,{
+    const response = await axios.post(`${API_ENDPOINT}/modules/${moduleId}/chapters`, { userId, moduleId }, {
       headers: {
-        Authorization: `Bearer ${token}`
-      }
-  });
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+    console.log("API Response:", response.data); // Log raw response
     return response.data;
-  } catch (error) {
-    console.error("Error fetching chapters by module:", error);
-    throw error;
+  } catch (err) {
+    console.error("Error fetching chapters:", err);
+    throw err;
   }
 };
 
@@ -66,4 +65,22 @@ export const updateChapter = (chapterData, module_id, callback) => {
     });
 };
 
-
+export const markChapterAsComplete = async (userId, chapterId) => {
+  const token = getCookies('token');
+  try {
+    const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
+    const response = await axios.post(
+      `${API_ENDPOINT}/user-chapter`,
+      { userId, chapterId, status: 1 },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (err) {
+    console.error("Error marking chapter as complete:", err);
+    throw err;
+  }
+};

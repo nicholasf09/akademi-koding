@@ -17,7 +17,7 @@
               <input
                 type="file"
                 id="fileUpload"
-                accept=".zip,.rar,.7z,.tar.gz,.pdf"
+                accept=".zip"
                 class="block w-full text-sm text-gray-900 border rounded-lg cursor-pointer bg-gray-50 focus:outline-none focus:ring-2 focus:ring-violet-300"
                 @change="handleFileUpload"
               />
@@ -38,6 +38,8 @@
 
 <script>
 import SubmissionHeader from '@/components/SubmissionHeader.vue';
+import { submitProject } from "@/services/project.service";
+import { getModuleIdBySlug } from '@/services/module.service';
 import { getProjectsByModuleId } from '@/services/module.service';
 
   export default {
@@ -110,7 +112,28 @@ import { getProjectsByModuleId } from '@/services/module.service';
             });
 
             if (response.ok) {
+              const responseData = await response.json();
+              const s3Link = responseData.s3_link; // Assuming the link is in the response
+
               alert("Submission successful!");
+
+              // Get userId from sessionStorage
+              const userId = sessionStorage.getItem("userId");
+
+              // Extract the moduleSlug from the URL
+              const moduleSlug = window.location.pathname.split("/")[3]; // Extracting from the URL path
+
+              // Get the moduleId using the moduleSlug
+              const moduleIdObject = await getModuleIdBySlug(moduleSlug);
+              const moduleId = moduleIdObject.module_id;
+
+              alert("Module ID:" + moduleId + "User ID:" + userId + "S3 Link:" + s3Link);
+
+
+              // Save the project to the database
+              await submitProject(userId, moduleId, s3Link);
+
+              alert("Project saved successfully!");
             } else {
               const errorResponse = await response.json();
               alert("Submission failed: " + errorResponse.message);
@@ -120,6 +143,7 @@ import { getProjectsByModuleId } from '@/services/module.service';
             alert("An error occurred. Please try again.");
           }
         };
+
         reader.readAsDataURL(this.selectedFile); // Read the file as base64
       },
     },

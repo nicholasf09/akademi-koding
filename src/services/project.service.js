@@ -38,13 +38,13 @@ export const updateProject = (id, comment, score) => {
     });
 };
 
-export const submitProject = (idUser, idModule, project) => {
+export const submitProject = (idUser, idModule, link) => {
   const token = getCookies("token");
   const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
 
   return axios.post(
     `${API_ENDPOINT}/project/submit`, // Endpoint untuk submit proyek
-    { idUser, idModule, project }, // Data yang dikirim dalam body
+    { idUser, idModule, link }, // Data yang dikirim dalam body
     {
       headers: {
         Authorization: `Bearer ${token}`, // Token untuk autentikasi

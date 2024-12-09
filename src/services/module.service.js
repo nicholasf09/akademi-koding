@@ -145,8 +145,14 @@ export const updateModule = (moduleData, courseId, callback) => {
 
 export const getProjectsByModuleId = async (moduleId) => {
   const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
+  const token = getCookies("token"); // Assuming you need an auth token
+
   try {
-    const response = await axios.get(`${API_ENDPOINT}/module/${moduleId}/projects`);
+    const response = await axios.get(`${API_ENDPOINT}/module/${moduleId}/projects`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
     return response.data; // Returns the projects data
   } catch (error) {
     console.error("Error fetching projects by module ID:", error);
@@ -184,5 +190,27 @@ export const getModuleIdBySlug = async (moduleSlug) => {
     throw error;
   }
 };
+
+export const markModuleComplete = async (userId, moduleId) => {
+  const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
+  const token = getCookies("token");
+
+  try {
+    await axios.post(
+      `${API_ENDPOINT}/complete-module`,
+      { userId, moduleId },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+  } catch (error) {
+    console.error("Error marking module complete:", error.response?.data || error.message);
+    throw error;
+  }
+};
+
 
 

@@ -28,7 +28,7 @@
 import ChapterHeader from "@/components/ChapterHeader.vue";
 import ChapterContent from "@/components/ChapterContent.vue";
 import ChapterList from "@/components/ChapterList.vue";
-import { getChaptersByModule } from "@/services/chapter.service";
+import { getuserChaptersByModule } from "@/services/chapter.service";
 import { getCourses } from "@/services/course.service";
 import { getModules } from "@/services/module.service";
 import getCookies from "@/hooks/getCookies";
@@ -88,7 +88,7 @@ export default {
     // Fetch chapter list based on the module ID
     async fetchChapters() {
       try {
-        const chapters = await getChaptersByModule(this.moduleId, getCookies("userId"));
+        const chapters = await getuserChaptersByModule(this.moduleId, getCookies("userId"));
         console.log("Raw chapters data:", chapters);
         this.chapterList = chapters.map((chapter) => ({
           ...chapter,

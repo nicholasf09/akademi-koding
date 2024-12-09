@@ -91,7 +91,6 @@ export default {
         this.isEnrolled = data.isEnrolled; // Ensure backend sends `isEnrolled`
       } catch (error) {
         console.error("Error checking enrollment status:", error);
-        alert("Could not verify enrollment status. Please try again.");
       }
     },
     async enrollModule() {

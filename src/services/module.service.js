@@ -190,4 +190,26 @@ export const getModuleIdBySlug = async (moduleSlug) => {
   }
 };
 
+export const markModuleComplete = async (userId, moduleId) => {
+  const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
+  const token = getCookies("token");
+
+  try {
+    await axios.post(
+      `${API_ENDPOINT}/complete-module`,
+      { userId, moduleId },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+  } catch (error) {
+    console.error("Error marking module complete:", error.response?.data || error.message);
+    throw error;
+  }
+};
+
+
 

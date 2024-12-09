@@ -2,11 +2,28 @@
 import axios from 'axios';
 import getCookies from '../hooks/getCookies.js';
 
-export const getChaptersByModule = async (moduleId, userId) => {
+export const getChaptersByModule = async (moduleId) => {
   const token = getCookies('token');
   try {
     const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
-    const response = await axios.post(`${API_ENDPOINT}/modules/${moduleId}/chapters`, { userId, moduleId }, {
+    const response = await axios.get(`${API_ENDPOINT}/modules/${moduleId}/chapters`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      },
+    });
+    console.log("API Response:", response.data); // Log raw response
+    return response.data;
+  } catch (err) {
+    console.error("Error fetching chapters:", err);
+    throw err;
+  }
+};
+
+export const getuserChaptersByModule = async (moduleId, userId) => {
+  const token = getCookies('token');
+  try {
+    const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
+    const response = await axios.post(`${API_ENDPOINT}/modules/${moduleId}/user-chapters`, { userId, moduleId }, {
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",

@@ -145,8 +145,13 @@ export const updateModule = (moduleData, courseId, callback) => {
 
 export const getProjectsByModuleId = async (moduleId) => {
   const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
+  const token = getCookies("token");
   try {
-    const response = await axios.get(`${API_ENDPOINT}/module/${moduleId}/projects`);
+    const response = await axios.get(`${API_ENDPOINT}/module/${moduleId}/projects`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      }
+    });
     return response.data; // Returns the projects data
   } catch (error) {
     console.error("Error fetching projects by module ID:", error);

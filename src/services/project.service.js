@@ -59,6 +59,28 @@ export const submitProject = (idUser, idModule, link) => {
     });
 };
 
+export const getProjectByUser = (idUser, idModule) => {
+  console.log("Received query parameters:", { idUser, idModule });
+
+  const token = getCookies("token");
+  const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
+
+  return axios.get(
+    `${API_ENDPOINT}/detail-projects/submitted?idUser=${idUser}&idModule=${idModule}`,
+      {
+          headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+          },
+      }
+  )
+    .then((res) => res.data) // Return data dari respons
+    .catch((err) => {
+      console.error("Error submitting project:", err);
+      throw err; // Lempar error untuk penanganan lebih lanjut
+    });
+};
+
 
 
 

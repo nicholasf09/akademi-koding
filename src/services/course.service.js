@@ -2,7 +2,7 @@ import axios from 'axios';
 import getCookies from '../hooks/getCookies';
 
 export const getCoursesWithPhoto = (callback) => {
-  const lambdaUrl = "https://yrw7jenvc3n5sr6h75npz4qwha0icglf.lambda-url.us-east-1.on.aws/";
+  const lambdaUrl = "https://3l5rkxq77abaerkudlzy3av6em0znyfw.lambda-url.us-east-1.on.aws/";
   const token = getCookies("token");
   const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
 
@@ -17,16 +17,16 @@ export const getCoursesWithPhoto = (callback) => {
 
       courses.forEach((course, index) => {
         const objectKey = course.link;
-
-        axios.post(lambdaUrl, {
-          objectKey: objectKey
-        }, {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        })
+          
+        axios.post(lambdaUrl, 
+          { objectKey }, // Body
+          {
+            headers: { 'Content-Type': 'application/json' },
+          }
+        )
           .then((lambdaRes) => {
             // Menambahkan base64 ke thumbnail course
+            console.log("lambdaRes:", lambdaRes);
             courses[index].thumbnail = lambdaRes.data.base64Data;
 
             // Cek jika semua course sudah diproses
@@ -47,7 +47,7 @@ export const getCoursesWithPhoto = (callback) => {
 };
 
 export const getCourseBySlugWithPhoto = async (slug, callback) => {
-  const lambdaUrl = "https://yrw7jenvc3n5sr6h75npz4qwha0icglf.lambda-url.us-east-1.on.aws/";
+  const lambdaUrl = "https://3l5rkxq77abaerkudlzy3av6em0znyfw.lambda-url.us-east-1.on.aws/";
   const token = getCookies("token");
   const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
 
@@ -60,7 +60,6 @@ export const getCourseBySlugWithPhoto = async (slug, callback) => {
       // console.log("res:", res.data[0]);
       const course = res.data[0];
       const objectKey = course.link;
-
 
       axios.post(lambdaUrl, {
         objectKey: objectKey

@@ -10,7 +10,6 @@ export default {
   components: {
     Navbar,
     CourseCard,
-    ModuleCard,
     FooterComponent,
   },
 };
@@ -76,48 +75,6 @@ export default {
           description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis elit turpis, accumsan quis lacus nec, faucibus aliquam tellus. Donec non sagittis mauris."
           link="/course/machine-learning"
         />
-      </div>
-    </div>
-
-    <div class="w-full px-10 py-10">
-      <p class="text-md text-violet-500 font-medium text-lg mb-3">Popular Modules</p>
-      <h1 class="text-4xl font-bold mb-7 w-2/4 leading-[50px]">Lihat contoh beberapa materi terpopuler berikut</h1>
-
-      <div class="grid grid-cols-3 gap-10 mb-10">
-        <ModuleCard
-          imgSrc="/img/pythonbasic.jpg"
-          title="Python Basic"
-          description="Lorem ipsum dolor sit amet consectetur adipisicing elit."
-          chapter="10"
-          link="/chapter"
-        />
-        <ModuleCard
-          imgSrc="/img/htmlfundamental.jpg"
-          title="HTML Fundalmentals"
-          description="Lorem ipsum dolor sit amet consectetur adipisicing elit."
-          chapter="10"
-          link="/chapter"
-        />
-        <ModuleCard
-          imgSrc="/img/introtensorflow.jpg"
-          title="Introduction to Tensorflow"
-          description="Lorem ipsum dolor sit amet consectetur adipisicing elit."
-          chapter="10"
-          link="/chapter"
-        />
-      </div>
-      <div class="w-full flex justify-center items-center">
-        <a class="group relative inline-block focus:outline-none focus:ring" href="#">
-          <span
-            class="absolute inset-0 translate-x-1.5 translate-y-1.5 bg-purple-300 transition-transform group-hover:translate-x-0 group-hover:translate-y-0"
-          ></span>
-
-          <span
-            class="relative inline-block border-2 border-current px-8 py-3 text-sm font-bold uppercase tracking-widest text-black group-active:text-opacity-75"
-          >
-            Lihat Semua
-          </span>
-        </a>
       </div>
     </div>
   </div>

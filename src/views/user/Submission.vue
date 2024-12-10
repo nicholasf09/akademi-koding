@@ -4,13 +4,13 @@
 
     <div class="flex flex-grow my-16">
       <!-- Problem Description -->
-      <div class="md:mx-32 p-4 max-h-[80vh] w-full overflow-scroll overflow-x-hidden md:flex md:gap-x-60 md:justify-center">
-        <section class="md:mt-[10vh]">
+      <div class="md:mx-36 p-4 max-h-[80vh] w-full overflow-scroll overflow-x-hidden md:flex md:gap-x-16 md:justify-center">
+        <section class="md:mt-[10vh]  w-2/3">
           <h2 class="text-3xl font-semibold mt-5 mb-2">Problem Description</h2>
           <p class="text-justify text-gray-700">{{ problemDescription }}</p>
         </section>
-        <section class="md:mt-[10vh]">
-          <h2 class="text-3xl font-semibold mt-5 mb-2">Submit Your Solution</h2>
+        <section class="md:mt-[10vh] w-1/3 ">
+          <h2 class="text-3xl font-semibold mt-5 mb-2">Your Solution</h2>
           <!-- Check if there is existing project data -->
           <div  v-if="projectByUser && projectByUser.length === 0">
             <form @submit.prevent="handleSubmit">
@@ -34,9 +34,9 @@
           </div>
 
           <div v-else>
-            <h3 class="text-2xl font-bold">Score: {{ projectComment }}</h3>
-            <p class="mt-2">Comment: {{ projectScore }}</p>
-            <a :href="projectLink" target="_blank" class="text-blue-500 underline mt-4 block">
+            <h3 class="text-2xl">Score: {{ projectComment }}</h3>
+            <p class="mt-2 mb-8">Comment: {{ projectScore }}</p>
+            <a :href="projectLink" target="_blank" class="text-white bg-violet-500 hover:bg-violet-700 rounded py-2  px-4">
               View Submission
             </a>
           </div>
@@ -77,10 +77,8 @@ import { getProjectsByModuleId } from '@/services/module.service';
         this.moduleId = this.$route.params.moduleSlug;
 
         this.projects = await getProjectsByModuleId(this.moduleId);
-        console.log("Fetched projects:", this.projects);
 
         this.problemDescription = this.projects;
-        console.log("Problem Description:", this.problemDescription);
 
         const userId = sessionStorage.getItem("userId");
 
@@ -95,13 +93,13 @@ import { getProjectsByModuleId } from '@/services/module.service';
         const response = await getProjectByUser(userId, moduleId);
         this.projectByUser = response.module_id || [];
         console.log("Project by user:", this.projectByUser);
-        if (this.projectByUser[0].comment && this.projectByUser[0].score && this.projectByUser[0].link) {
+        if (this.projectByUser.length > 0 && this.projectByUser[0].comment !== null) {
           this.projectComment = this.projectByUser[0].comment;
           this.projectScore = this.projectByUser[0].score;
           this.projectLink = this.projectByUser[0].link;
         } else {
-          this.projectComment = "No submission yet! Please Wait!";
-          this.projectScore = "No score yet! Please Wait!"
+          this.projectComment = "No score yet! Please Wait!";
+          this.projectScore = "Your assesment is still being checked!"
           this.projectLink = "#";
         }
 

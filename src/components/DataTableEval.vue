@@ -140,7 +140,11 @@ const submitEdit = async () => {
             <tr v-for="item in filteredItems" :key="item.id">
                 <td class="font-semibold py-2 px-4">{{ item.id }}</td>
                 <td class="font-semibold py-2">{{ item.user_id }}</td>
-                <td class="font-semibold py-2">{{ item.link }}</td>
+                <td class="font-semibold py-2">
+                  <a :href="item.link" target="_blank" class="text-white bg-blue-500 hover:bg-blue-700 rounded py-2  px-4">
+                    Check Submission
+                  </a>
+                </td>
                 <td class="font-semibold py-2">{{ item.score }}</td>
                 <td class="font-semibold py-2">{{ item.comment }}</td>
                 <td class="font-semibold py-2 px-4">

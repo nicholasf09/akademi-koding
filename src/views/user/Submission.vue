@@ -79,7 +79,8 @@ import { getProjectsByModuleId } from '@/services/module.service';
         this.projects = await getProjectsByModuleId(this.moduleId);
         console.log("Fetched projects:", this.projects);
 
-          this.problemDescription = this.projects;
+        this.problemDescription = this.projects;
+        console.log("Problem Description:", this.problemDescription);
 
         const userId = sessionStorage.getItem("userId");
 
@@ -90,13 +91,19 @@ import { getProjectsByModuleId } from '@/services/module.service';
         const moduleIdObject = await getModuleIdBySlug(moduleSlug);
         const moduleId = moduleIdObject.module_id;
 
-        alert("Module ID:" + moduleId + "User ID:" + userId);
 
         const response = await getProjectByUser(userId, moduleId);
         this.projectByUser = response.module_id || [];
-        this.projectComment = this.projectByUser[0].comment;
-        this.projectScore = this.projectByUser[0].score;
-        this.projectLink = this.projectByUser[0].link;
+        console.log("Project by user:", this.projectByUser);
+        if (this.projectByUser[0].comment && this.projectByUser[0].score && this.projectByUser[0].link) {
+          this.projectComment = this.projectByUser[0].comment;
+          this.projectScore = this.projectByUser[0].score;
+          this.projectLink = this.projectByUser[0].link;
+        } else {
+          this.projectComment = "No submission yet! Please Wait!";
+          this.projectScore = "No score yet! Please Wait!"
+          this.projectLink = "#";
+        }
 
       } catch (error) {
         console.error("Error fetching projects:", error);
@@ -128,7 +135,7 @@ import { getProjectsByModuleId } from '@/services/module.service';
           };
 
           try {
-            const lambdaEndpoint = "https://uiat6utq6t6sg6ega7don7mtba0vzprr.lambda-url.us-east-1.on.aws/";
+            const lambdaEndpoint = "https://xb5tfzu5bdjrknsl3cer4xcc7i0opexk.lambda-url.us-east-1.on.aws/";
 
             const response = await fetch(lambdaEndpoint, {
               method: "POST",

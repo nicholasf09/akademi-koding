@@ -4,6 +4,7 @@ import CourseCard from '@/components/CourseCard.vue';
 import FooterComponent from '@/components/FooterComponent.vue';
 import ModuleCard from '@/components/ModuleCard.vue';
 import Navbar from '@/components/Navbar.vue';
+import { getCourses } from '@/services/course.service';
 
 export default {
   name: 'HomePage',
@@ -11,6 +12,16 @@ export default {
     Navbar,
     CourseCard,
     FooterComponent,
+  },
+  data() {
+    return {
+      courses: [],
+    };
+  },
+  created() {
+    getCourses((data) => {
+      this.courses = data;
+    });
   },
 };
 </script>
@@ -58,22 +69,12 @@ export default {
 
       <div class="grid grid-cols-3 gap-10">
         <CourseCard
-          icon="/img/datascience.svg"
-          title="Data Science"
-          description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis elit turpis, accumsan quis lacus nec, faucibus aliquam tellus. Donec non sagittis mauris."
-          link="/course/data-science"
-        />
-        <CourseCard
-          icon='/img/webdev.svg'
-          title="Web Develoment"
-          description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis elit turpis, accumsan quis lacus nec, faucibus aliquam tellus. Donec non sagittis mauris."
-          link="/course/web-development"
-        />
-        <CourseCard
-          icon='/img/ml.svg'
-          title="Machine Learning"
-          description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis elit turpis, accumsan quis lacus nec, faucibus aliquam tellus. Donec non sagittis mauris."
-          link="/course/machine-learning"
+          v-for="course in courses"
+          :key="course.id"
+          :icon="course.thumbnail"
+          :title="course.name"
+          :description="course.description"
+          :link="'/course/' + course.slug"
         />
       </div>
     </div>

@@ -5,13 +5,13 @@
       <h1 class="text-2xl font-bold mb-3">{{ title }}</h1>
       <p class="mb-3">{{ description }}</p>
       <ul class="text-violet-500 mb-7 font-medium">
-        <li>{{ chapter }} Chapter</li>
+        <li>{{ isEnrolled }} Chapter</li>
         <li>23,000 Views</li>
         <li>&#9733; 4.78/5.00</li>
       </ul>
       <!-- Button logic based on enrollment -->
       <button
-        v-if="!isEnrolled"
+        v-if="!isEnrolled && completed === 0"
         @click="enrollModule"
         class="group relative inline-block focus:outline-none focus:ring"
       >
@@ -24,8 +24,26 @@
           Enroll
         </span>
       </button>
+
+      <!-- Continue Button -->
       <button
-        v-else
+        v-if="!isEnrolled && completed === 1"
+        @click="redirectToModule"
+        class="group relative inline-block focus:outline-none focus:ring"
+      >
+        <span
+          class="absolute inset-0 translate-x-1.5 translate-y-1.5 bg-green-300 transition-transform group-hover:translate-x-0 group-hover:translate-y-0"
+        ></span>
+        <span
+          class="relative inline-block border-2 border-current px-8 py-3 text-sm font-bold uppercase tracking-widest text-black group-active:text-opacity-75"
+        >
+          Continue
+        </span>
+      </button>
+
+      <!-- Redirect Button -->
+      <button
+        v-else-if="isEnrolled"
         @click="redirectToModule"
         class="group relative inline-block focus:outline-none focus:ring"
       >
@@ -58,40 +76,42 @@ export default {
   },
   data() {
     return {
-      isEnrolled: false, // Tracks if the user is enrolled in this module
+        isEnrolled: false, // Tracks if the user is enrolled in this module
+        completed: 0,      // Tracks if the module is completed
     };
   },
   methods: {
     async checkEnrollment() {
-      try {
-        const userId = getCookies("userId");
-        const token = getCookies("token");
+        try {
+            const userId = getCookies("userId");
+            const token = getCookies("token");
 
-        const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
-        const response = await fetch(`${API_ENDPOINT}/enroll`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`, // Add token if required
-          },
-          body: JSON.stringify({
-            userId,
-            moduleId: this.moduleId,
-            checkOnly: true, // This tells the server we only want to check
-          }),
-        });
+            const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
+            const response = await fetch(`${API_ENDPOINT}/enroll`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify({
+                    userId,
+                    moduleId: this.moduleId,
+                    checkOnly: true,
+                }),
+            });
 
-        if (!response.ok) {
-          const errorData = await response.json();
-          console.error("Server error:", errorData.message);
-          throw new Error(errorData.message || "Failed to fetch enrollment status.");
+            if (!response.ok) {
+                const errorData = await response.json();
+                console.error("Server error:", errorData.message);
+                throw new Error(errorData.message || "Failed to fetch enrollment status.");
+            }
+
+            const { isEnrolled, completed } = await response.json();
+            this.isEnrolled = isEnrolled;
+            this.completed = completed;
+        } catch (error) {
+            console.error("Error checking enrollment status:", error);
         }
-
-        const data = await response.json();
-        this.isEnrolled = data.isEnrolled; // Ensure backend sends `isEnrolled`
-      } catch (error) {
-        console.error("Error checking enrollment status:", error);
-      }
     },
     async enrollModule() {
       try {

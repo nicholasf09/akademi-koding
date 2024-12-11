@@ -2,7 +2,7 @@ import axios from 'axios';
 import getCookies from '../hooks/getCookies';
 
 export const getCoursesWithPhoto = (callback) => {
-  const lambdaUrl = "https://3l5rkxq77abaerkudlzy3av6em0znyfw.lambda-url.us-east-1.on.aws/";
+  const lambdaUrl = "https://q7sb33yylnnezmkd6wcltynoaq0aelnu.lambda-url.us-east-1.on.aws/";
   const token = getCookies("token");
   const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
 
@@ -47,7 +47,7 @@ export const getCoursesWithPhoto = (callback) => {
 };
 
 export const getCourseBySlugWithPhoto = async (slug, callback) => {
-  const lambdaUrl = "https://3l5rkxq77abaerkudlzy3av6em0znyfw.lambda-url.us-east-1.on.aws/";
+  const lambdaUrl = "https://q7sb33yylnnezmkd6wcltynoaq0aelnu.lambda-url.us-east-1.on.aws/";
   const token = getCookies("token");
   const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
 

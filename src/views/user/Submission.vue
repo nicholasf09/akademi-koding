@@ -133,7 +133,7 @@ import { getProjectsByModuleId } from '@/services/module.service';
           };
 
           try {
-            const lambdaEndpoint = "https://nsaurjqvw6vkt5all2fkagw7me0obmbx.lambda-url.us-east-1.on.aws/";
+            const lambdaEndpoint = "https://6bpfg2s42ifxmrbbdhd2662u540vlirl.lambda-url.us-east-1.on.aws/";
 
             const response = await fetch(lambdaEndpoint, {
               method: "POST",

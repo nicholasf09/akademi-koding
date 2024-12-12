@@ -91,7 +91,7 @@
   };
 
     const submitCreate = async () => {
-        const lambdaUrl = 'https://qbd6nhrgsxxy6mcmnwh5jprfju0tpwsh.lambda-url.us-east-1.on.aws/';
+        const lambdaUrl = 'https://7emiu37y47pmr5kigq26mmlh2i0ywslw.lambda-url.us-east-1.on.aws/';
 
         const newItem = {
             name: module.value.name,
@@ -134,7 +134,7 @@
     }
 
     const submitEdit = async () =>{
-        const lambdaUrl = 'https://qbd6nhrgsxxy6mcmnwh5jprfju0tpwsh.lambda-url.us-east-1.on.aws/';
+        const lambdaUrl = 'https://7emiu37y47pmr5kigq26mmlh2i0ywslw.lambda-url.us-east-1.on.aws/';
 
         const id = idModelEdit.value;
         const name = module.value.name;

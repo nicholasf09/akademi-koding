@@ -33,9 +33,9 @@ export default {
       handleUpdateItem(newItem){
             const index = this.items.findIndex(item => item.id === newItem.id);
             this.items[index] = newItem;
-
+            // console.log("Updating item", newItem);
             updateChapter(newItem, this.id, () => {
-                console.log("Module updated");
+                console.log("Chapter updated");
             });
         },
         async handleCreateItem(newItem) {

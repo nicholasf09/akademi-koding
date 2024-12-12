@@ -65,6 +65,8 @@ export const updateChapter = (chapterData, module_id, callback) => {
     module_id,
   };
 
+  // console.log("Data to send:", dataToSend);
+
   const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
 
   axios.post(`${API_ENDPOINT}/update/chapter`, dataToSend, {

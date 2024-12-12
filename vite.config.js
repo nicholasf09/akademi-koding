@@ -7,7 +7,6 @@ import jwt from 'jsonwebtoken';
 
 // https://vite.dev/config/
 export default defineConfig({
-  base: './',
   plugins: [
     vue(),
     {

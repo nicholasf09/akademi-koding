@@ -52,7 +52,7 @@ export const getModuleBySlug = async (slug) => {
 };
 
 export const getModulesByCourseIdWithPhoto = async (courseId, callback) => {
-  const lambdaUrl = "https://lhwof2ussqj2rnvglhlozgrq3u0vbifq.lambda-url.us-east-1.on.aws/";
+  const lambdaUrl = "https://oahg5fjuipew4hhyilwpiypt6u0vhadn.lambda-url.us-east-1.on.aws/";
   const token = getCookies("token");
 
   try {

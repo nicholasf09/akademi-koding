@@ -83,7 +83,7 @@
     }
 
     const submitCreate = async () => {
-        const lambdaUrl = 'https://7emiu37y47pmr5kigq26mmlh2i0ywslw.lambda-url.us-east-1.on.aws/';
+        const lambdaUrl = 'https://zsiaukkvqk3u4x76zxc2yelnjq0uanow.lambda-url.us-east-1.on.aws/';
         const newItem = {
             name: course.value.name,    
             slug: course.value.slug,
@@ -120,7 +120,7 @@
 
 
     const submitEdit = async () => {
-        const lambdaUrl = 'https://7emiu37y47pmr5kigq26mmlh2i0ywslw.lambda-url.us-east-1.on.aws/';
+        const lambdaUrl = 'https://zsiaukkvqk3u4x76zxc2yelnjq0uanow.lambda-url.us-east-1.on.aws/';
         const id = idEdit.value;
         const name = course.value.name;
         const slug = course.value.slug;

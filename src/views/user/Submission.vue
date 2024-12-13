@@ -52,6 +52,7 @@ import SubmissionHeader from '@/components/SubmissionHeader.vue';
 import { submitProject, getProjectByUser } from "@/services/project.service";
 import { getModuleIdBySlug } from '@/services/module.service';
 import { getProjectsByModuleId } from '@/services/module.service';
+import getCookies from '@/hooks/getCookies';
 
   export default {
     name: "SubmissionPage",
@@ -150,7 +151,7 @@ import { getProjectsByModuleId } from '@/services/module.service';
               alert("Submission successful!");
 
               // Get userId from sessionStorage
-              const userId = sessionStorage.getItem("userId");
+              const userId = getCookies("userId");
 
               // Extract the moduleSlug from the URL
               const moduleSlug = window.location.pathname.split("/")[3]; // Extracting from the URL path

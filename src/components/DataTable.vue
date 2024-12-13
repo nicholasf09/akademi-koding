@@ -132,12 +132,18 @@
         isModalVisible.value = false;
         const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
 
+        const token = getCookies("token");
+
         axios.post(`${API_ENDPOINT}/update/course`, {
             id: id,
             name: name,
             slug: slug,
             link: link,
             description: description,
+        }, {
+            headers: {
+               Authorization: `Bearer ${token}`,
+            }
         })
         .then(() => {
             items.value = items.value.map(item => {

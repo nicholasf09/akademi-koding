@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col min-h-screen bg-violet-100 max-h-[100vh] overflow-hidden text-black">
+  <div class="flex flex-col min-h-screen bg-white max-h-[100vh] overflow-hidden text-black">
     <SubmissionHeader :moduleTitle="moduleTitle" :chapterTitle="chapterTitle" />
 
     <div class="flex flex-grow my-16">

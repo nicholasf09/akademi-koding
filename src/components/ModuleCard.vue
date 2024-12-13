@@ -5,7 +5,7 @@
       <h1 class="text-2xl font-bold mb-3">{{ title }}</h1>
       <p class="mb-3">{{ description }}</p>
       <ul class="text-violet-500 mb-7 font-medium">
-        <li>{{ isEnrolled }} Chapter</li>
+        <li>{{ chapter }} Chapter</li>
         <li>23,000 Views</li>
         <li>&#9733; 4.78/5.00</li>
       </ul>
